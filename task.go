@@ -61,7 +61,7 @@ type TaskGroup struct {
 	MaxHosts      int             `json:"max_hosts"`
 	SetupGroup    CommandSequence `json:"setup_group"`
 	SetupTask     CommandSequence `json:"setup_task"`
-	Tasks         CommandSequence `json:"tasks"`
+	Tasks         []string        `json:"tasks"`
 	TeardownTask  CommandSequence `json:"teardown_task"`
 	TeardownGroup CommandSequence `json:"teardown_group"`
 	Timeout       CommandSequence `json:"timeout"`
@@ -69,3 +69,4 @@ type TaskGroup struct {
 
 func (g *TaskGroup) Name(id string) *TaskGroup      { g.GroupName = id; return g }
 func (g *TaskGroup) SetMaxHosts(num int) *TaskGroup { g.MaxHosts = num; return g }
+func (g *TaskGroup) Task(id ...string) *TaskGroup   { g.Tasks = append(g.Tasks, id...); return g }

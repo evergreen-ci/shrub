@@ -132,4 +132,16 @@ func TestTaskGroup(t *testing.T) {
 		g.SetMaxHosts(1066)
 		assert(t, g.MaxHosts == 1066)
 	})
+	t.Run("TaskAdder", func(t *testing.T) {
+		g := &TaskGroup{}
+		assert(t, len(g.Tasks) == 0, "default value")
+		g.Task()
+		assert(t, len(g.Tasks) == 0, "noop")
+		g.Task("one")
+		assert(t, len(g.Tasks) == 1, "first")
+		g.Task("two")
+		assert(t, len(g.Tasks) == 2, "no deduplicate")
+		g.Task("two", "43")
+		assert(t, len(g.Tasks) == 4, "multi add")
+	})
 }
