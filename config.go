@@ -27,7 +27,7 @@ type Configuration struct {
 	Groups    []*TaskGroup                `json:"groups,omitempty"`
 	Variants  []*Variant                  `json:"variants,omitempty"`
 	Pre       *CommandSequence            `json:"pre,omitempty"`
-	Post      *CommandSequence            `json:"post,omitmepty"`
+	Post      *CommandSequence            `json:"post,omitempty"`
 	Timeout   *CommandSequence            `json:"timeout,omitempty"`
 
 	// Top Level Options
