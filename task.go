@@ -58,13 +58,13 @@ func (t *Task) Priority(pri int) *Task { t.PriorityOverride = pri; return t }
 
 type TaskGroup struct {
 	GroupName     string          `json:"name"`
-	MaxHosts      int             `json:"max_hosts"`
-	SetupGroup    CommandSequence `json:"setup_group"`
-	SetupTask     CommandSequence `json:"setup_task"`
+	MaxHosts      int             `json:"max_hosts,omitempty"`
 	Tasks         []string        `json:"tasks"`
-	TeardownTask  CommandSequence `json:"teardown_task"`
-	TeardownGroup CommandSequence `json:"teardown_group"`
-	Timeout       CommandSequence `json:"timeout"`
+	SetupGroup    CommandSequence `json:"setup_group,omitempty"`
+	SetupTask     CommandSequence `json:"setup_task,omitempty"`
+	TeardownTask  CommandSequence `json:"teardown_task,omitempty"`
+	TeardownGroup CommandSequence `json:"teardown_group,omitempty"`
+	Timeout       CommandSequence `json:"timeout,omeitempty"`
 }
 
 func (g *TaskGroup) Name(id string) *TaskGroup      { g.GroupName = id; return g }

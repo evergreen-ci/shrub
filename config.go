@@ -22,13 +22,13 @@ import (
 // Configuration is the top-level representation of the components of
 // an evergreen project configuration.
 type Configuration struct {
-	Functions map[string]*CommandSequence `json:"functions"`
-	Tasks     []*Task                     `json:"tasks"`
-	Groups    []*TaskGroup                `json:"groups"`
-	Variants  []*Variant                  `json:"variants"`
-	Pre       *CommandSequence            `json:"pre"`
-	Post      *CommandSequence            `json:"post"`
-	Timeout   *CommandSequence            `json:"timeout"`
+	Functions map[string]*CommandSequence `json:"functions,omitempty"`
+	Tasks     []*Task                     `json:"tasks,omitempty"`
+	Groups    []*TaskGroup                `json:"groups,omitempty"`
+	Variants  []*Variant                  `json:"variants,omitempty"`
+	Pre       *CommandSequence            `json:"pre,omitempty"`
+	Post      *CommandSequence            `json:"post,omitmepty"`
+	Timeout   *CommandSequence            `json:"timeout,omitempty"`
 
 	// Top Level Options
 	ExecTimeoutSecs int      `json:"timeout,omitempty"`
