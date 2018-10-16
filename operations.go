@@ -2,9 +2,8 @@ package shrub
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
-
-	"github.com/pkg/errors"
 )
 
 ////////////////////////////////////////////////////////////////////////
