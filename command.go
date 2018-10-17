@@ -1,12 +1,57 @@
 package shrub
 
 import (
+	"fmt"
+	"sync"
 	"time"
 )
+
+var registeredCommands *commandRegistry
+
+func init() {
+	registeredCommands = &commandRegistry{
+		mu:       &sync.RWMutex{},
+		commands: map[string]Command{},
+	}
+	toRegister := []Command{
+		CmdExec{},
+		CmdExecShell{},
+		CmdS3Put{},
+		CmdS3Get{},
+		CmdS3Copy{},
+		CmdGetProject{},
+		CmdResultsJSON{},
+		CmdResultsXunit{},
+		CmdResultsGoTest{},
+		CmdArchiveCreate{Format: ZIP},
+		CmdArchiveCreate{Format: TARBALL},
+		CmdArchiveExtract{Format: ZIP},
+		CmdArchiveExtract{Format: TARBALL},
+		CmdArchiveExtract{Format: "auto"},
+		CmdAttachArtifacts{},
+	}
+	registeredCommands.mu.Lock()
+	defer registeredCommands.mu.Unlock()
+	for _, cmd := range toRegister {
+		registeredCommands.commands[cmd.Name()] = cmd
+	}
+}
 
 type Command interface {
 	Resolve() *CommandDefinition
 	Validate() error
+	Name() string
+}
+
+type commandRegistry struct {
+	mu       *sync.RWMutex
+	commands map[string]Command
+}
+
+func (r *commandRegistry) getCommand(cmdName string) Command {
+	r.mu.RLock()
+	defer r.mu.RUnlock()
+	return r.commands[cmdName]
 }
 
 type CommandDefinition struct {
@@ -110,4 +155,12 @@ func (s *CommandSequence) Extend(cmds ...Command) *CommandSequence {
 		*s = append(*s, cmd.Resolve())
 	}
 	return s
+}
+
+func CommandFactory(cmdName string) (Command, error) {
+	cmd := registeredCommands.getCommand(cmdName)
+	if cmd == nil {
+		return nil, fmt.Errorf("command %s not found", cmdName)
+	}
+	return cmd, nil
 }

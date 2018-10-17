@@ -1,6 +1,7 @@
 package shrub
 
 import (
+	"reflect"
 	"testing"
 	"time"
 )
@@ -286,4 +287,18 @@ func TestCommandSequence(t *testing.T) {
 			test(t, s)
 		})
 	}
+}
+
+func TestCommandFactory(t *testing.T) {
+	count := 0
+	for name, cmd := range registeredCommands.commands {
+		factoryCmd, err := CommandFactory(name)
+		assert(t, err == nil)
+		assert(t, reflect.DeepEqual(cmd, factoryCmd))
+		count++
+	}
+	assert(t, count == 15)
+
+	_, err := CommandFactory("nothere")
+	assert(t, err.Error() == "command nothere not found")
 }
