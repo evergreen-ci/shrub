@@ -11,29 +11,29 @@ var registeredCommands *commandRegistry
 func init() {
 	registeredCommands = &commandRegistry{
 		mu:       &sync.RWMutex{},
-		commands: map[string]Command{},
+		commands: map[string]commandFactory{},
 	}
-	toRegister := []Command{
-		CmdExec{},
-		CmdExecShell{},
-		CmdS3Put{},
-		CmdS3Get{},
-		CmdS3Copy{},
-		CmdGetProject{},
-		CmdResultsJSON{},
-		CmdResultsXunit{},
-		CmdResultsGoTest{},
-		CmdArchiveCreate{Format: ZIP},
-		CmdArchiveCreate{Format: TARBALL},
-		CmdArchiveExtract{Format: ZIP},
-		CmdArchiveExtract{Format: TARBALL},
-		CmdArchiveExtract{Format: "auto"},
-		CmdAttachArtifacts{},
+	toRegister := []commandFactory{
+		subprocessExecFactory,
+		shellExecFactory,
+		s3PutFactory,
+		s3GetFactory,
+		s3CopyFactory,
+		getProjectFactory,
+		jsonResultsFactory,
+		xunitResultsFactory,
+		goTestResultsFactory,
+		archiveCreateZipFactory,
+		archiveCreateTarballFactory,
+		archiveExtractZipFactory,
+		archiveExtractTarballFactory,
+		archiveExtractAutoFactory,
+		attachArtifactsFactory,
 	}
 	registeredCommands.mu.Lock()
 	defer registeredCommands.mu.Unlock()
-	for _, cmd := range toRegister {
-		registeredCommands.commands[cmd.Name()] = cmd
+	for _, factory := range toRegister {
+		registeredCommands.commands[factory().Name()] = factory
 	}
 }
 
@@ -45,14 +45,10 @@ type Command interface {
 
 type commandRegistry struct {
 	mu       *sync.RWMutex
-	commands map[string]Command
+	commands map[string]commandFactory
 }
 
-func (r *commandRegistry) getCommand(cmdName string) Command {
-	r.mu.RLock()
-	defer r.mu.RUnlock()
-	return r.commands[cmdName]
-}
+type commandFactory func() Command
 
 type CommandDefinition struct {
 	FunctionName  string                 `json:"func,omitempty"`
@@ -157,10 +153,12 @@ func (s *CommandSequence) Extend(cmds ...Command) *CommandSequence {
 	return s
 }
 
-func CommandFactory(cmdName string) (Command, error) {
-	cmd := registeredCommands.getCommand(cmdName)
-	if cmd == nil {
+func GetCommand(cmdName string) (Command, error) {
+	registeredCommands.mu.RLock()
+	defer registeredCommands.mu.RUnlock()
+	factory, found := registeredCommands.commands[cmdName]
+	if !found {
 		return nil, fmt.Errorf("command %s not found", cmdName)
 	}
-	return cmd, nil
+	return factory(), nil
 }

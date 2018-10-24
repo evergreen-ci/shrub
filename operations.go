@@ -50,6 +50,7 @@ func (c CmdExec) Resolve() *CommandDefinition {
 		Params:      exportCmd(c),
 	}
 }
+func subprocessExecFactory() Command { return CmdExec{} }
 
 type CmdExecShell struct {
 	Background       bool   `json:"background"`
@@ -71,6 +72,7 @@ func (c CmdExecShell) Resolve() *CommandDefinition {
 		Params:      exportCmd(c),
 	}
 }
+func shellExecFactory() Command { return CmdExecShell{} }
 
 type CmdS3Put struct {
 	Optional               bool     `json:"optional"`
@@ -104,6 +106,7 @@ func (c CmdS3Put) Resolve() *CommandDefinition {
 		Params:      exportCmd(c),
 	}
 }
+func s3PutFactory() Command { return CmdS3Put{} }
 
 type CmdS3Get struct {
 	AWSKey        string   `json:"aws_key"`
@@ -123,6 +126,7 @@ func (c CmdS3Get) Resolve() *CommandDefinition {
 		Params:      exportCmd(c),
 	}
 }
+func s3GetFactory() Command { return CmdS3Get{} }
 
 type CmdS3Copy struct {
 	AWSKey    string `json:"aws_key"`
@@ -150,6 +154,7 @@ func (c CmdS3Copy) Resolve() *CommandDefinition {
 		Params:      exportCmd(c),
 	}
 }
+func s3CopyFactory() Command { return CmdS3Copy{} }
 
 type CmdGetProject struct {
 	Token     string            `json:"token"`
@@ -165,6 +170,7 @@ func (c CmdGetProject) Resolve() *CommandDefinition {
 		Params:      exportCmd(c),
 	}
 }
+func getProjectFactory() Command { return CmdGetProject{} }
 
 type CmdResultsJSON struct {
 	File string `json:"file_location"`
@@ -178,6 +184,7 @@ func (c CmdResultsJSON) Resolve() *CommandDefinition {
 		Params:      exportCmd(c),
 	}
 }
+func jsonResultsFactory() Command { return CmdResultsJSON{} }
 
 type CmdResultsXunit struct {
 	File  string   `json:"file"`
@@ -192,6 +199,7 @@ func (c CmdResultsXunit) Resolve() *CommandDefinition {
 		Params:      exportCmd(c),
 	}
 }
+func xunitResultsFactory() Command { return CmdResultsXunit{} }
 
 type CmdResultsGoTest struct {
 	JSONFormat   bool `json:"-"`
@@ -219,6 +227,7 @@ func (c CmdResultsGoTest) Resolve() *CommandDefinition {
 		Params:      exportCmd(c),
 	}
 }
+func goTestResultsFactory() Command { return CmdResultsGoTest{} }
 
 type ArchiveFormat string
 
@@ -302,6 +311,12 @@ func (c CmdArchiveExtract) Resolve() *CommandDefinition {
 	}
 }
 
+func archiveCreateZipFactory() Command      { return CmdArchiveCreate{Format: ZIP} }
+func archiveCreateTarballFactory() Command  { return CmdArchiveCreate{Format: TARBALL} }
+func archiveExtractZipFactory() Command     { return CmdArchiveExtract{Format: ZIP} }
+func archiveExtractTarballFactory() Command { return CmdArchiveExtract{Format: TARBALL} }
+func archiveExtractAutoFactory() Command    { return CmdArchiveExtract{Format: "auto"} }
+
 type CmdAttachArtifacts struct {
 	Optional bool     `json:"optional"`
 	Files    []string `json:"files"`
@@ -315,3 +330,4 @@ func (c CmdAttachArtifacts) Resolve() *CommandDefinition {
 		Params:      exportCmd(c),
 	}
 }
+func attachArtifactsFactory() Command { return CmdAttachArtifacts{} }
