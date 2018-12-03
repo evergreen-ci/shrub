@@ -1,6 +1,7 @@
 package shrub
 
 import (
+	"reflect"
 	"testing"
 	"time"
 )
@@ -286,4 +287,29 @@ func TestCommandSequence(t *testing.T) {
 			test(t, s)
 		})
 	}
+}
+
+func TestCommandFactory(t *testing.T) {
+	count := 0
+	for name, factory := range registeredCommands.commands {
+		factoryCmd, err := GetCommand(name)
+		assert(t, err == nil)
+		assert(t, reflect.DeepEqual(factory(), factoryCmd))
+		count++
+	}
+	assert(t, count == 15)
+
+	_, err := GetCommand("nothere")
+	assert(t, err.Error() == "command nothere not found")
+
+	// check that mutating a command doesn't mutate it in the factory
+	cmd, err := GetCommand("shell.exec")
+	assert(t, err == nil)
+	shellExec := cmd.(CmdExecShell)
+	assert(t, shellExec.Script == "")
+	shellExec.Script = "echo hi"
+	cmd, err = GetCommand("shell.exec")
+	assert(t, err == nil)
+	shellExec = cmd.(CmdExecShell)
+	assert(t, shellExec.Script == "")
 }
