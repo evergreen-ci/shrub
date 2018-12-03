@@ -142,7 +142,7 @@ type CmdS3Copy struct {
 		Destination struct {
 			Bucket string `json:"bucket"`
 			Path   string `json:"path"`
-		} `json:"source"`
+		} `json:"destination"`
 	} `json:"s3_copy_files"`
 }
 
