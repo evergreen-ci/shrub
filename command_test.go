@@ -292,24 +292,21 @@ func TestCommandSequence(t *testing.T) {
 func TestCommandFactory(t *testing.T) {
 	count := 0
 	for name, factory := range registeredCommands.commands {
-		factoryCmd, err := GetCommand(name)
-		assert(t, err == nil)
+		factoryCmd := GetCommand(name)
 		assert(t, reflect.DeepEqual(factory(), factoryCmd))
 		count++
 	}
 	assert(t, count == 15)
 
-	_, err := GetCommand("nothere")
-	assert(t, err.Error() == "command nothere not found")
+	cmd := GetCommand("nothere")
+	assert(t, cmd == nil)
 
 	// check that mutating a command doesn't mutate it in the factory
-	cmd, err := GetCommand("shell.exec")
-	assert(t, err == nil)
+	cmd = GetCommand("shell.exec")
 	shellExec := cmd.(CmdExecShell)
 	assert(t, shellExec.Script == "")
 	shellExec.Script = "echo hi"
-	cmd, err = GetCommand("shell.exec")
-	assert(t, err == nil)
+	cmd = GetCommand("shell.exec")
 	shellExec = cmd.(CmdExecShell)
 	assert(t, shellExec.Script == "")
 }

@@ -1,7 +1,6 @@
 package shrub
 
 import (
-	"fmt"
 	"sync"
 	"time"
 )
@@ -153,12 +152,12 @@ func (s *CommandSequence) Extend(cmds ...Command) *CommandSequence {
 	return s
 }
 
-func GetCommand(cmdName string) (Command, error) {
+func GetCommand(cmdName string) Command {
 	registeredCommands.mu.RLock()
 	defer registeredCommands.mu.RUnlock()
 	factory, found := registeredCommands.commands[cmdName]
 	if !found {
-		return nil, fmt.Errorf("command %s not found", cmdName)
+		return nil
 	}
-	return factory(), nil
+	return factory()
 }
