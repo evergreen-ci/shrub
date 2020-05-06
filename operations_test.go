@@ -10,6 +10,7 @@ func TestWellformedOperations(t *testing.T) {
 	cases := map[string]Command{
 		"subprocess.exec":       CmdExec{},
 		"shell.exec":            CmdExecShell{},
+		"subprocess.scripting":  CmdSubprocessScripting{},
 		"s3Copy.copy":           CmdS3Copy{},
 		"s3.get":                CmdS3Get{},
 		"s3.put":                CmdS3Put{CredKey: "foo", CredSecret: "bar", LocalFile: "baz"},
