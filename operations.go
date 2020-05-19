@@ -205,13 +205,9 @@ func (c CmdS3Copy) Resolve() *CommandDefinition {
 }
 func s3CopyFactory() Command { return CmdS3Copy{} }
 
-type cmdS3SyncBase struct {
+type CmdS3Push struct {
 	ExcludeFilter string `json:"exclude"`
 	MaxRetries    int    `json:"max_retries"`
-}
-
-type CmdS3Push struct {
-	cmdS3SyncBase
 }
 
 func (c CmdS3Push) Name() string    { return "s3.push" }
@@ -225,7 +221,8 @@ func (c CmdS3Push) Resolve() *CommandDefinition {
 func s3PushFactory() Command { return CmdS3Push{} }
 
 type CmdS3Pull struct {
-	cmdS3SyncBase
+	ExcludeFilter string `json:"exclude"`
+	MaxRetries    int    `json:"max_retries"`
 }
 
 func (c CmdS3Pull) Name() string    { return "s3.pull" }
