@@ -205,6 +205,36 @@ func (c CmdS3Copy) Resolve() *CommandDefinition {
 }
 func s3CopyFactory() Command { return CmdS3Copy{} }
 
+type CmdS3Push struct {
+	ExcludeFilter string `json:"exclude"`
+	MaxRetries    int    `json:"max_retries"`
+}
+
+func (c CmdS3Push) Name() string    { return "s3.push" }
+func (c CmdS3Push) Validate() error { return nil }
+func (c CmdS3Push) Resolve() *CommandDefinition {
+	return &CommandDefinition{
+		CommandName: c.Name(),
+		Params:      exportCmd(c),
+	}
+}
+func s3PushFactory() Command { return CmdS3Push{} }
+
+type CmdS3Pull struct {
+	ExcludeFilter string `json:"exclude"`
+	MaxRetries    int    `json:"max_retries"`
+}
+
+func (c CmdS3Pull) Name() string    { return "s3.pull" }
+func (c CmdS3Pull) Validate() error { return nil }
+func (c CmdS3Pull) Resolve() *CommandDefinition {
+	return &CommandDefinition{
+		CommandName: c.Name(),
+		Params:      exportCmd(c),
+	}
+}
+func s3PullFactory() Command { return CmdS3Pull{} }
+
 type CmdGetProject struct {
 	Token     string            `json:"token"`
 	Directory string            `json:"directory"`
