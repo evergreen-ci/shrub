@@ -27,19 +27,19 @@ func exportCmd(cmd Command) map[string]interface{} {
 }
 
 type CmdExec struct {
-	Background       bool   `json:"background"`
-	Silent           bool   `json:"silent"`
-	ContinueOnError  bool   `json:"continue_on_err"`
-	SystemLog        bool   `json:"system_log"`
-	CombineOutput    bool   `json:"redirect_standard_error_to_output"`
-	IgnoreStdError   bool   `json:"ignore_standard_error"`
-	IgnoreStdOut     bool   `json:"ignore_standard_out"`
-	KeepEmptyArgs    bool   `json:"keep_empty_args"`
-	WorkingDirectory string `json:"working_dir"`
-	Command          string
-	Binary           string
-	Args             []string
-	Env              map[string]string
+	Background       bool              `json:"background"`
+	Silent           bool              `json:"silent"`
+	ContinueOnError  bool              `json:"continue_on_err"`
+	SystemLog        bool              `json:"system_log"`
+	CombineOutput    bool              `json:"redirect_standard_error_to_output"`
+	IgnoreStdError   bool              `json:"ignore_standard_error"`
+	IgnoreStdOut     bool              `json:"ignore_standard_out"`
+	KeepEmptyArgs    bool              `json:"keep_empty_args"`
+	WorkingDirectory string            `json:"working_dir"`
+	Command          string            `json:"command"`
+	Binary           string            `json:"binary"`
+	Args             []string          `json:"args"`
+	Env              map[string]string `json:"env"`
 }
 
 func (c CmdExec) Name() string    { return "subprocess.exec" }
