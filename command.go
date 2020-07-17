@@ -31,6 +31,8 @@ func init() {
 		archiveExtractTarballFactory,
 		archiveExtractAutoFactory,
 		attachArtifactsFactory,
+		hostCreateFactory,
+		hostListFactory,
 	}
 	registeredCommands.mu.Lock()
 	defer registeredCommands.mu.Unlock()

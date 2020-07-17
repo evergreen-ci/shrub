@@ -426,3 +426,86 @@ func (c CmdAttachArtifacts) Resolve() *CommandDefinition {
 	}
 }
 func attachArtifactsFactory() Command { return CmdAttachArtifacts{} }
+
+type CmdHostCreate struct {
+	File string `json:"file,omitempty" yaml:"file,omitempty"`
+
+	// agent-controlled settings
+	CloudProvider       string `json:"provider,omitempty" yaml:"provider,omitempty"`
+	NumHosts            string `json:"num_hosts,omitempty" yaml:"num_hosts,omitempty"`
+	Scope               string `json:"scope,omitempty" yaml:"scope,omitempty"`
+	SetupTimeoutSecs    int    `json:"timeout_setup_secs,omitempty" yaml:"timeout_setup_secs,omitempty"`
+	TeardownTimeoutSecs int    `json:"timeout_teardown_secs,omitempty" yaml:"timeout_teardown_secs,omitempty"`
+	Retries             int    `json:"retries,omitempty" yaml:"retries,omitempty"`
+
+	// EC2-related settings
+	AMI             string                `json:"ami,omitempty" yaml:"ami,omitempty"`
+	Distro          string                `json:"distro,omitempty" yaml:"distro,omitempty"`
+	EBSDevices      []HostCreateEBSDevice `json:"ebs_block_device,omitempty" yaml:"ebs_block_device,omitempty"`
+	InstanceType    string                `json:"instance_type,omitempty" yaml:"instance_type,omitempty"`
+	IPv6            bool                  `json:"ipv6,omitempty" yaml:"ipv6,omitempty"`
+	Region          string                `json:"region,omitempty" yaml:"region,omitempty"`
+	SecurityGroups  []string              `json:"security_group_ids,omitempty" yaml:"security_group_ids,omitempty"`
+	Spot            bool                  `json:"spot,omitempty" yaml:"spot,omitempty"`
+	Subnet          string                `json:"subnet_id,omitempty" yaml:"subnet_id,omitempty"`
+	UserdataFile    string                `json:"userdata_file,omitempty" yaml:"userdata_file,omitempty"`
+	UserdataCommand string                `json:"userdata_command,omitempty" yaml:"userdata_command,omitempty"`
+	AWSKeyID        string                `json:"aws_access_key_id,omitempty" yaml:"aws_access_key_id,omitempty"`
+	AWSSecret       string                `json:"aws_secret_access_key,omitempty" yaml:"aws_secret_access_key,omitempty"`
+	KeyName         string                `json:"key_name,omitempty" yaml:"key_name,omitempty"`
+
+	// Docker-related settings
+	Image                    string                           `json:"image,omitempty" yaml:"image,omitempty"`
+	Command                  string                           `json:"command,omitempty" yaml:"command,omitempty"`
+	PublishPorts             bool                             `json:"publish_ports,omitempty" yaml:"publish_ports,omitempty"`
+	Registry                 HostCreateDockerRegistrySettings `json:"registry,omitempty" yaml:"registry,omitempty"`
+	Background               bool                             `json:"background,omitempty" yaml:"background,omitempty"`
+	ContainerWaitTimeoutSecs int                              `json:"container_wait_timeout_secs,omitempty" yaml:"container_wait_timeout_secs,omitempty"`
+	PollFrequency            int                              `json:"poll_frequency_secs,omitempty" yaml:"poll_frequency_secs,omitempty"`
+	StdoutFile               string                           `json:"stdout_file_name,omitempty" yaml:"stdout_file_name,omitempty"`
+	StderrFile               string                           `json:"stderr_file_name,omitempty" yaml:"stderr_file_name,omitempty"`
+	EnvironmentVars          map[string]string                `json:"environment_vars,omitempty" yaml:"environment_vars,omitempty"`
+}
+
+type HostCreateEBSDevice struct {
+	DeviceName string `json:"device_name,omitempty" yaml:"device_name,omitempty"`
+	IOPS       int    `json:"ebs_iops,omitempty" yaml:"ebs_iops,omitempty"`
+	SizeGiB    int    `json:"ebs_size,omitempty" yaml:"ebs_size,omitempty"`
+	SnapshotID string `json:"ebs_snapshot_id,omitempty" yaml:"ebs_snapshot_id,omitempty"`
+}
+
+type HostCreateDockerRegistrySettings struct {
+	Name     string `json:"registry_name,omitempty" yaml:"registry_name,omitempty"`
+	Username string `json:"registry_username,omitempty" yaml:"registry_username,omitempty"`
+	Password string `json:"registry_password,omitempty" yaml:"registry_password,omitempty"`
+}
+
+func (c CmdHostCreate) Name() string    { return "host.create" }
+func (c CmdHostCreate) Validate() error { return nil }
+func (c CmdHostCreate) Resolve() *CommandDefinition {
+	return &CommandDefinition{
+		CommandName: c.Name(),
+		Params:      exportCmd(c),
+	}
+}
+
+func hostCreateFactory() Command { return CmdHostCreate{} }
+
+type CmdHostList struct {
+	Path        string `json:"path,omitempty" yaml:"path,omitempty"`
+	Wait        bool   `json:"wait,omitempty" yaml:"wait,omitempty"`
+	Silent      bool   `json:"silent,omitempty" yaml:"silent,omitempty"`
+	TimeoutSecs int    `json:"timeout_seconds,omitempty" yaml:"timeout_seconds,omitempty"`
+	NumHosts    string `json:"num_hosts,omitempty" yaml:"num_hosts,omitempty"`
+}
+
+func (c CmdHostList) Name() string    { return "host.list" }
+func (c CmdHostList) Validate() error { return nil }
+func (c CmdHostList) Resolve() *CommandDefinition {
+	return &CommandDefinition{
+		CommandName: c.Name(),
+		Params:      exportCmd(c),
+	}
+}
+
+func hostListFactory() Command { return CmdHostList{} }
