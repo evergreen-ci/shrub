@@ -27,6 +27,8 @@ func TestWellformedOperations(t *testing.T) {
 		"archive.zip_extract":   CmdArchiveExtract{Format: ZIP},
 		"archive.targz_extract": CmdArchiveExtract{Format: TARBALL},
 		"archive.auto_extract":  CmdArchiveExtract{Format: ArchiveFormat("auto")},
+		"host.create":           CmdHostCreate{},
+		"host.list":             CmdHostList{},
 	}
 
 	for name, cmd := range cases {
