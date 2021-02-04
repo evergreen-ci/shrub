@@ -231,8 +231,12 @@ func (c CmdS3Push) Resolve() *CommandDefinition {
 func s3PushFactory() Command { return CmdS3Push{} }
 
 type CmdS3Pull struct {
-	ExcludeFilter string `json:"exclude,omitempty" yaml:"exclude,omitempty"`
-	MaxRetries    int    `json:"max_retries,omitempty" yaml:"max_retries,omitempty"`
+	Task             string `json:"task" yaml:"task"`
+	ExcludeFilter    string `json:"exclude,omitempty" yaml:"exclude,omitempty"`
+	MaxRetries       int    `json:"max_retries,omitempty" yaml:"max_retries,omitempty"`
+	WorkingDir       string `json:"working_dir,omitempty" yaml:"working_dir,omitempty"`
+	DeleteOnSync     bool   `json:"delete_on_sync,omitempty" yaml:"delete_on_sync,omitempty"`
+	FromBuildVariant string `json:"from_build_variant,omitempty" yaml:"from_build_variant,omitempty"`
 }
 
 func (c CmdS3Pull) Name() string    { return "s3.pull" }
