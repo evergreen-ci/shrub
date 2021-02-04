@@ -56,16 +56,19 @@ func (c CmdExec) Resolve() *CommandDefinition {
 func subprocessExecFactory() Command { return CmdExec{} }
 
 type CmdExecShell struct {
-	Script                        string `json:"script" yaml:"script"`
-	Shell                         string `json:"shell,omitempty" yaml:"shell,omitempty"`
-	ContinueOnError               bool   `json:"continue_on_err,omitempty" yaml:"continue_on_err,omitempty"`
-	Background                    bool   `json:"background,omitempty" yaml:"background,omitempty"`
-	Silent                        bool   `json:"silent,omitempty" yaml:"silent,omitempty"`
-	RedirectStandardErrorToOutput bool   `json:"redirect_standard_error_to_output,omitempty" yaml:"redirect_standard_error_to_output,omitempty"`
-	IgnoreStandardError           bool   `json:"ignore_standard_error" yaml:"ignore_standard_error"`
-	IgnoreStandardOutput          bool   `json:"ignore_standard_out" yaml:"ignore_standard_out"`
-	SystemLog                     bool   `json:"system_log,omitempty" yaml:"system_log,omitempty"`
-	WorkingDirectory              string `json:"working_dir,omitempty" yaml:"working_dir,omitempty"`
+	Script                        string            `json:"script" yaml:"script"`
+	Shell                         string            `json:"shell,omitempty" yaml:"shell,omitempty"`
+	Env                           map[string]string `json:"env,omitempty" yaml:"env,omitempty"`
+	AddExpansionsToEnv            map[string]string `json:"add_expansions_to_env,omitempty" yaml:"add_expansions_to_env,omitempty"`
+	IncludeExpansionsInEnv        map[string]string `json:"include_expansions_in_env,omitempty" yaml:"include_expansions_inenv,omitempty"`
+	ContinueOnError               bool              `json:"continue_on_err,omitempty" yaml:"continue_on_err,omitempty"`
+	Background                    bool              `json:"background,omitempty" yaml:"background,omitempty"`
+	Silent                        bool              `json:"silent,omitempty" yaml:"silent,omitempty"`
+	RedirectStandardErrorToOutput bool              `json:"redirect_standard_error_to_output,omitempty" yaml:"redirect_standard_error_to_output,omitempty"`
+	IgnoreStandardError           bool              `json:"ignore_standard_error" yaml:"ignore_standard_error"`
+	IgnoreStandardOutput          bool              `json:"ignore_standard_out" yaml:"ignore_standard_out"`
+	SystemLog                     bool              `json:"system_log,omitempty" yaml:"system_log,omitempty"`
+	WorkingDirectory              string            `json:"working_dir,omitempty" yaml:"working_dir,omitempty"`
 }
 
 func (c CmdExecShell) Name() string    { return "shell.exec" }
