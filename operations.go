@@ -167,6 +167,7 @@ func s3PutFactory() Command { return CmdS3Put{} }
 type CmdS3Get struct {
 	AWSKey        string   `json:"aws_key" yaml:"aws_key"`
 	AWSSecret     string   `json:"aws_secret" yaml:"aws_secret"`
+	Region        string   `json:"region,omitempty" yaml:"region,omitempty"`
 	RemoteFile    string   `json:"remote_file" yaml:"remote_file"`
 	Bucket        string   `json:"bucket" yaml:"bucket"`
 	LocalFile     string   `json:"local_file,omitempty" yaml:"local_file,omitempty"`
@@ -250,9 +251,13 @@ func (c CmdS3Pull) Resolve() *CommandDefinition {
 func s3PullFactory() Command { return CmdS3Pull{} }
 
 type CmdGetProject struct {
-	Directory string            `json:"directory" yaml:"directory"`
-	Token     string            `json:"token,omitempty" yaml:"token,omitempty"`
-	Revisions map[string]string `json:"revisions,omitempty" yaml:"revisions,omitempty"`
+	Directory         string            `json:"directory" yaml:"directory"`
+	Token             string            `json:"token,omitempty" yaml:"token,omitempty"`
+	Revisions         map[string]string `json:"revisions,omitempty" yaml:"revisions,omitempty"`
+	ShallowClone      bool              `json:"shallow_clone,omitempty" yaml:"shallow_clone,omitempty"`
+	RecurseSubmodules bool              `json:"recurse_submodules,omitempty" yaml:"recurse_submodules,omitempty"`
+	CommitterName     string            `json:"committer_name,omitempty" yaml:"committer_name,omitempty"`
+	CommitterEmail    string            `json:"committer_email,omitempty" yaml:"committer_email,omitempty"`
 }
 
 func (c CmdGetProject) Name() string    { return "git.get_project" }
@@ -418,6 +423,7 @@ func archiveExtractAutoFactory() Command    { return CmdArchiveExtract{Format: "
 
 type CmdAttachArtifacts struct {
 	Files    []string `json:"files" yaml:"files"`
+	Prefix   string   `json:"prefix,omitempty" yaml:"prefix,omitempty"`
 	Optional bool     `json:"optional,omitempty" yaml:"optional,omitempty"`
 }
 
@@ -513,3 +519,95 @@ func (c CmdHostList) Resolve() *CommandDefinition {
 }
 
 func hostListFactory() Command { return CmdHostList{} }
+
+type CmdExpansionsUpdate struct {
+	File              string `json:"file,omitempty" yaml:"file,omitempty"`
+	IgnoreMissingFile bool   `json:"ignore_missing_file,omitempty" yaml:"ignore_missing_file,omitempty"`
+}
+
+type ExpansionUpdateParams struct {
+	Key    string `json:"key,omitempty" yaml:"key,omitempty"`
+	Value  string `json:"value,omitempty" yaml:"value,omitempty"`
+	Concat string `json:"concat,omitempty" yaml:"concat,omitempty"`
+}
+
+func (c CmdExpansionsUpdate) Name() string    { return "expansions.update" }
+func (c CmdExpansionsUpdate) Validate() error { return nil }
+func (c CmdExpansionsUpdate) Resolve() *CommandDefinition {
+	return &CommandDefinition{
+		CommandName: c.Name(),
+		Params:      exportCmd(c),
+	}
+}
+
+func expansionsUpdateFactory() Command { return CmdExpansionsUpdate{} }
+
+type CmdExpansionsWrite struct {
+	File     string `json:"file,omitempty" yaml:"file,omitempty"`
+	Redacted bool   `json:"redacted,omitempty" yaml:"redacted,omitempty"`
+}
+
+func (c CmdExpansionsWrite) Name() string    { return "expansions.write" }
+func (c CmdExpansionsWrite) Validate() error { return nil }
+func (c CmdExpansionsWrite) Resolve() *CommandDefinition {
+	return &CommandDefinition{
+		CommandName: c.Name(),
+		Params:      exportCmd(c),
+	}
+}
+
+func expansionsWriteFactory() Command { return CmdExpansionsWrite{} }
+
+// kim: TODO: continue with json.send, manifest.load, perf.send, timeout.update
+// kim: TODO: ask Jonathan about git.push command
+
+type CmdJSONSend struct {
+	File     string `json:"file" yaml:"file"`
+	DataName string `json:"name" yaml:"name"`
+}
+
+func (c CmdJSONSend) Name() string    { return "json.send" }
+func (c CmdJSONSend) Validate() error { return nil }
+func (c CmdJSONSend) Resolve() *CommandDefinition {
+	return &CommandDefinition{
+		CommandName: c.Name(),
+		Params:      exportCmd(c),
+	}
+}
+
+func jsonSendFactory() Command { return CmdJSONSend{} }
+
+type CmdPerfSend struct {
+	File      string `json:"file" yaml:"file"`
+	AWSKey    string `json:"aws_key,omitempty" yaml:"aws_key,omitempty"`
+	AWSSecret string `json:"aws_secret,omitempty" yaml:"aws_secret,omitempty"`
+	Region    string `json:"region,omitempty" yaml:"region,omitempty"`
+	Bucket    string `json:"bucket,omitempty" yaml:"bucket,omitempty"`
+	Prefix    string `json:"prefix,omitempty" yaml:"prefix,omitempty"`
+}
+
+func (c CmdPerfSend) Name() string    { return "perf.send" }
+func (c CmdPerfSend) Validate() error { return nil }
+func (c CmdPerfSend) Resolve() *CommandDefinition {
+	return &CommandDefinition{
+		CommandName: c.Name(),
+		Params:      exportCmd(c),
+	}
+}
+
+func perfSendFactory() Command { return CmdPerfSend{} }
+
+type CmdTimeoutUpdate struct {
+	TimeoutSecs     int `json:"timeout_secs,omitempty" yaml:"timeout_secs,omitempty"`
+	ExecTimeoutSecs int `json:"exec_timeout_secs,omitempty" yaml:"exec_timeout_secs,omitempty"`
+}
+
+func (c CmdTimeoutUpdate) Name() string    { return "timeout.update" }
+func (c CmdTimeoutUpdate) Validate() error { return nil }
+func (c CmdTimeoutUpdate) Resolve() *CommandDefinition {
+	return &CommandDefinition{
+		CommandName: c.Name(),
+		Params:      exportCmd(c),
+	}
+}
+func timeoutUpdateFactory() Command { return CmdTimeoutUpdate{} }
