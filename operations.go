@@ -558,9 +558,6 @@ func (c CmdExpansionsWrite) Resolve() *CommandDefinition {
 
 func expansionsWriteFactory() Command { return CmdExpansionsWrite{} }
 
-// kim: TODO: continue with json.send, manifest.load, perf.send, timeout.update
-// kim: TODO: ask Jonathan about git.push command
-
 type CmdJSONSend struct {
 	File     string `json:"file" yaml:"file"`
 	DataName string `json:"name" yaml:"name"`
