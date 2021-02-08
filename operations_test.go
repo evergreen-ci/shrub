@@ -29,6 +29,11 @@ func TestWellformedOperations(t *testing.T) {
 		"archive.auto_extract":  CmdArchiveExtract{Format: ArchiveFormat("auto")},
 		"host.create":           CmdHostCreate{},
 		"host.list":             CmdHostList{},
+		"expansions.update":     CmdExpansionsUpdate{},
+		"expansions.write":      CmdExpansionsWrite{},
+		"json.send":             CmdJSONSend{},
+		"perf.send":             CmdPerfSend{},
+		"timeout.update":        CmdTimeoutUpdate{},
 	}
 
 	for name, cmd := range cases {

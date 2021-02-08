@@ -33,6 +33,11 @@ func init() {
 		attachArtifactsFactory,
 		hostCreateFactory,
 		hostListFactory,
+		expansionsUpdateFactory,
+		expansionsWriteFactory,
+		jsonSendFactory,
+		perfSendFactory,
+		timeoutUpdateFactory,
 	}
 	registeredCommands.mu.Lock()
 	defer registeredCommands.mu.Unlock()
