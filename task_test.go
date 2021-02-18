@@ -1,6 +1,8 @@
 package shrub
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestTaskBuilder(t *testing.T) {
 	cases := map[string]func(t *testing.T, task *Task){
@@ -132,6 +134,14 @@ func TestTaskGroup(t *testing.T) {
 		g.SetMaxHosts(1066)
 		assert(t, g.MaxHosts == 1066)
 	})
+	t.Run("ShareProcessesSetter", func(t *testing.T) {
+		g := &TaskGroup{}
+		require(t, !g.ShareProcesses)
+		g.SetShareProcesses(true)
+		assert(t, g.ShareProcesses, "set share processes")
+		g.SetShareProcesses(false)
+		assert(t, !g.ShareProcesses, "unset share processes")
+	})
 	t.Run("TaskAdder", func(t *testing.T) {
 		g := &TaskGroup{}
 		assert(t, len(g.Tasks) == 0, "default value")
@@ -143,5 +153,103 @@ func TestTaskGroup(t *testing.T) {
 		assert(t, len(g.Tasks) == 2, "no deduplicate")
 		g.Task("two", "43")
 		assert(t, len(g.Tasks) == 4, "multi add")
+	})
+	t.Run("SetupGroupAdder", func(t *testing.T) {
+		g := &TaskGroup{}
+		assert(t, len(g.SetupGroupCmds) == 0, "default value")
+		g.SetupGroup()
+		assert(t, len(g.SetupGroupCmds) == 0, "noop")
+		g.SetupGroup(CmdExecShell{})
+		assert(t, len(g.SetupGroupCmds) == 1, "first command")
+		g.SetupGroup(CmdExec{})
+		assert(t, len(g.SetupGroupCmds) == 2, "no deduplicate")
+		g.SetupGroup(CmdExecShell{}, CmdExec{})
+		assert(t, len(g.SetupGroupCmds) == 4, "multi add")
+		defer expect(t, "adding invalid command should panic")
+		g.SetupGroup(CmdS3Put{})
+	})
+	t.Run("SetupGroupCanFailTaskSetter", func(t *testing.T) {
+		g := &TaskGroup{}
+		require(t, !g.SetupGroupCanFailTask)
+		g.SetSetupGroupCanFailTask(true)
+		assert(t, g.SetupGroupCanFailTask, "setup group can fail tasks")
+		g.SetSetupGroupCanFailTask(false)
+		assert(t, !g.SetupGroupCanFailTask, "setup group cannot fail tasks")
+	})
+	t.Run("SetupGroupTimeoutSecsSetter", func(t *testing.T) {
+		g := &TaskGroup{}
+		require(t, !g.SetupGroupCanFailTask)
+		g.SetSetupGroupTimeoutSecs(100)
+		assert(t, g.SetupGroupTimeoutSecs == 100, "set setup group timeout secs")
+		g.SetSetupGroupTimeoutSecs(0)
+		assert(t, g.SetupGroupTimeoutSecs == 0, "unset setup group timeout secs")
+	})
+	t.Run("SetupTaskAdder", func(t *testing.T) {
+		g := &TaskGroup{}
+		assert(t, len(g.SetupTaskCmds) == 0, "default value")
+		g.SetupTask()
+		assert(t, len(g.SetupTaskCmds) == 0, "noop")
+		g.SetupTask(CmdExecShell{})
+		assert(t, len(g.SetupTaskCmds) == 1, "first command")
+		g.SetupTask(CmdExec{})
+		assert(t, len(g.SetupTaskCmds) == 2, "no deduplicate")
+		g.SetupTask(CmdExecShell{}, CmdExec{})
+		assert(t, len(g.SetupTaskCmds) == 4, "multi add")
+		defer expect(t, "adding invalid command should panic")
+		g.SetupTask(CmdS3Put{})
+	})
+	t.Run("TeardownTaskAdder", func(t *testing.T) {
+		g := &TaskGroup{}
+		assert(t, len(g.TeardownTaskCmds) == 0, "default value")
+		g.TeardownTask()
+		assert(t, len(g.TeardownTaskCmds) == 0, "noop")
+		g.TeardownTask(CmdExecShell{})
+		assert(t, len(g.TeardownTaskCmds) == 1, "first command")
+		g.TeardownTask(CmdExec{})
+		assert(t, len(g.TeardownTaskCmds) == 2, "no deduplicate")
+		g.TeardownTask(CmdExecShell{}, CmdExec{})
+		assert(t, len(g.TeardownTaskCmds) == 4, "multi add")
+		defer expect(t, "adding invalid command should panic")
+		g.TeardownTask(CmdS3Put{})
+	})
+	t.Run("TeardownGroupAdder", func(t *testing.T) {
+		g := &TaskGroup{}
+		assert(t, len(g.TeardownGroupCmds) == 0, "default value")
+		g.TeardownGroup()
+		assert(t, len(g.TeardownGroupCmds) == 0, "noop")
+		g.TeardownGroup(CmdExecShell{})
+		assert(t, len(g.TeardownGroupCmds) == 1, "first command")
+		g.TeardownGroup(CmdExec{})
+		assert(t, len(g.TeardownGroupCmds) == 2, "no deduplicate")
+		g.TeardownGroup(CmdExecShell{}, CmdExec{})
+		assert(t, len(g.TeardownGroupCmds) == 4, "multi add")
+		defer expect(t, "adding invalid command should panic")
+		g.TeardownGroup(CmdS3Put{})
+	})
+	t.Run("TimeoutAdder", func(t *testing.T) {
+		g := &TaskGroup{}
+		assert(t, len(g.TimeoutCmds) == 0, "default value")
+		g.Timeout()
+		assert(t, len(g.TimeoutCmds) == 0, "noop")
+		g.Timeout(CmdExecShell{})
+		assert(t, len(g.TimeoutCmds) == 1, "first command")
+		g.Timeout(CmdExec{})
+		assert(t, len(g.TimeoutCmds) == 2, "no deduplicate")
+		g.Timeout(CmdExecShell{}, CmdExec{})
+		assert(t, len(g.TimeoutCmds) == 4, "multi add")
+		defer expect(t, "adding invalid command should panic")
+		g.Timeout(CmdS3Put{})
+	})
+	t.Run("TagAdder", func(t *testing.T) {
+		g := &TaskGroup{}
+		require(t, len(g.Tags) == 0, "default value")
+		g.Tag()
+		assert(t, len(g.Tags) == 0, "noop")
+		g.Tag("one")
+		assert(t, len(g.Tags) == 1, "first")
+		g.Tag("two")
+		assert(t, len(g.Tags) == 2, "add again")
+		g.Tag("two", "43")
+		assert(t, len(g.Tags) == 4, "multi add without deduplicating")
 	})
 }
