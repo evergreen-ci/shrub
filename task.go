@@ -1,10 +1,18 @@
 package shrub
 
 type Task struct {
-	Name             string           `json:"name" yaml:"name"`
-	PriorityOverride int              `json:"priority,omitempty" yaml:"priority_override,omitempty"`
-	Dependencies     []TaskDependency `json:"depends_on,omitempty" yaml:"dependencies,omitempty"`
-	Commands         CommandSequence  `json:"commands" yaml:"commands"`
+	Name               string           `json:"name" yaml:"name"`
+	PriorityOverride   int              `json:"priority,omitempty" yaml:"priority_override,omitempty"`
+	ExecTimeoutSecs    int              `json:"exec_timeout_secs,omitempty" yaml:"exec_timeout_secs,omitempty"`
+	Dependencies       []TaskDependency `json:"depends_on,omitempty" yaml:"dependencies,omitempty"`
+	Commands           CommandSequence  `json:"commands" yaml:"commands"`
+	Tags               []string         `json:"tags,omitempty" yaml:"tags,omitempty"`
+	IsPatchable        *bool            `json:"patchable,omitempty" yaml:"patchable,omitempty"`
+	IsPatchOnly        *bool            `json:"patch_only,omitempty" yaml:"patch_only,omitempty"`
+	IsAllowedForGitTag *bool            `json:"allow_for_git_tag,omitempty" yaml:"allow_for_git_tag,omitempty"`
+	IsGitTagOnly       *bool            `json:"git_tag_only,omitempty" yaml:"git_tag_only,omitempty"`
+	CanStepback        *bool            `json:"stepback,omitempty" yaml:"stepback,omitempty"`
+	MustHaveResults    *bool            `json:"must_have_results,omitempty" yaml:"must_have_results,omitempty"`
 }
 
 type TaskDependency struct {
@@ -45,6 +53,11 @@ func (t *Task) Function(fns ...string) *Task {
 	return t
 }
 
+func (t *Task) Tag(tags ...string) *Task {
+	t.Tags = append(t.Tags, tags...)
+	return t
+}
+
 func (t *Task) FunctionWithVars(id string, vars map[string]string) *Task {
 	t.Commands = append(t.Commands, &CommandDefinition{
 		FunctionName: id,
@@ -54,7 +67,45 @@ func (t *Task) FunctionWithVars(id string, vars map[string]string) *Task {
 	return t
 }
 
-func (t *Task) Priority(pri int) *Task { t.PriorityOverride = pri; return t }
+func (t *Task) Priority(pri int) *Task {
+	t.PriorityOverride = pri
+	return t
+}
+
+func (t *Task) ExecTimeout(s int) *Task {
+	t.ExecTimeoutSecs = s
+	return t
+}
+
+func (t *Task) Patchable(val bool) *Task {
+	t.IsPatchable = &val
+	return t
+}
+
+func (t *Task) PatchOnly(val bool) *Task {
+	t.IsPatchOnly = &val
+	return t
+}
+
+func (t *Task) AllowForGitTag(val bool) *Task {
+	t.IsAllowedForGitTag = &val
+	return t
+}
+
+func (t *Task) GitTagOnly(val bool) *Task {
+	t.IsGitTagOnly = &val
+	return t
+}
+
+func (t *Task) Stepback(val bool) *Task {
+	t.CanStepback = &val
+	return t
+}
+
+func (t *Task) MustHaveTestResults(val bool) *Task {
+	t.MustHaveResults = &val
+	return t
+}
 
 type TaskGroup struct {
 	GroupName             string          `json:"name" yaml:"name"`
