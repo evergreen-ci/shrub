@@ -2,17 +2,17 @@ package shrub
 
 type Task struct {
 	Name               string           `json:"name" yaml:"name"`
-	PriorityOverride   int              `json:"priority,omitempty" yaml:"priority_override,omitempty"`
-	ExecTimeoutSecs    int              `json:"exec_timeout_secs,omitempty" yaml:"exec_timeout_secs,omitempty"`
 	Dependencies       []TaskDependency `json:"depends_on,omitempty" yaml:"dependencies,omitempty"`
 	Commands           CommandSequence  `json:"commands" yaml:"commands"`
 	Tags               []string         `json:"tags,omitempty" yaml:"tags,omitempty"`
+	PriorityOverride   int              `json:"priority,omitempty" yaml:"priority_override,omitempty"`
+	ExecTimeoutSecs    int              `json:"exec_timeout_secs,omitempty" yaml:"exec_timeout_secs,omitempty"`
 	IsPatchable        *bool            `json:"patchable,omitempty" yaml:"patchable,omitempty"`
 	IsPatchOnly        *bool            `json:"patch_only,omitempty" yaml:"patch_only,omitempty"`
 	IsAllowedForGitTag *bool            `json:"allow_for_git_tag,omitempty" yaml:"allow_for_git_tag,omitempty"`
 	IsGitTagOnly       *bool            `json:"git_tag_only,omitempty" yaml:"git_tag_only,omitempty"`
 	CanStepback        *bool            `json:"stepback,omitempty" yaml:"stepback,omitempty"`
-	MustHaveResults    *bool            `json:"must_have_results,omitempty" yaml:"must_have_results,omitempty"`
+	MustHaveResults    *bool            `json:"must_have_test_results,omitempty" yaml:"must_have_test_results,omitempty"`
 }
 
 type TaskDependency struct {
@@ -111,15 +111,15 @@ type TaskGroup struct {
 	GroupName             string          `json:"name" yaml:"name"`
 	MaxHosts              int             `json:"max_hosts,omitempty" yaml:"max_hosts,omitempty"`
 	ShareProcesses        bool            `json:"share_processes,omitempty" yaml:"share_processes,omitemtpy"`
-	SetupGroupCmds        CommandSequence `json:"setup_group,omitempty" yaml:"setup_group,omitempty"`
+	SetupGroup            CommandSequence `json:"setup_group,omitempty" yaml:"setup_group,omitempty"`
 	SetupGroupCanFailTask bool            `json:"setup_group_can_fail_task,omitempty" yaml:"setup_group_can_fail_task,omitempty"`
 	SetupGroupTimeoutSecs int             `json:"setup_group_timeout_secs,omitempty" yaml:"setup_group_timeout_secs,omitempty"`
-	SetupTaskCmds         CommandSequence `json:"setup_task,omitempty" yaml:"setup_task,omitempty"`
+	SetupTask             CommandSequence `json:"setup_task,omitempty" yaml:"setup_task,omitempty"`
 	Tasks                 []string        `json:"tasks" yaml:"tasks"`
-	TeardownTaskCmds      CommandSequence `json:"teardown_task,omitempty" yaml:"teardown_task,omitempty"`
-	TeardownGroupCmds     CommandSequence `json:"teardown_group,omitempty" yaml:"teardown_group,omitempty"`
-	TimeoutCmds           CommandSequence `json:"timeout,omitempty" yaml:"timeout,omitempty"`
 	Tags                  []string        `json:"tags,omitempty" yaml:"tags,omitempty"`
+	TeardownTask          CommandSequence `json:"teardown_task,omitempty" yaml:"teardown_task,omitempty"`
+	TeardownGroup         CommandSequence `json:"teardown_group,omitempty" yaml:"teardown_group,omitempty"`
+	Timeout               CommandSequence `json:"timeout,omitempty" yaml:"timeout,omitempty"`
 }
 
 func (g *TaskGroup) Name(id string) *TaskGroup {
@@ -137,12 +137,12 @@ func (g *TaskGroup) SetShareProcesses(val bool) *TaskGroup {
 	return g
 }
 
-func (g *TaskGroup) SetupGroup(cmds ...Command) *TaskGroup {
+func (g *TaskGroup) SetupGroupCommand(cmds ...Command) *TaskGroup {
 	for _, c := range cmds {
 		if err := c.Validate(); err != nil {
 			panic(err)
 		}
-		g.SetupGroupCmds = append(g.SetupGroupCmds, c.Resolve())
+		g.SetupGroup = append(g.SetupGroup, c.Resolve())
 	}
 	return g
 }
@@ -157,12 +157,12 @@ func (g *TaskGroup) SetSetupGroupTimeoutSecs(timeoutSecs int) *TaskGroup {
 	return g
 }
 
-func (g *TaskGroup) SetupTask(cmds ...Command) *TaskGroup {
+func (g *TaskGroup) SetupTaskCommand(cmds ...Command) *TaskGroup {
 	for _, c := range cmds {
 		if err := c.Validate(); err != nil {
 			panic(err)
 		}
-		g.SetupTaskCmds = append(g.SetupTaskCmds, c.Resolve())
+		g.SetupTask = append(g.SetupTask, c.Resolve())
 	}
 	return g
 }
@@ -172,32 +172,32 @@ func (g *TaskGroup) Task(id ...string) *TaskGroup {
 	return g
 }
 
-func (g *TaskGroup) TeardownTask(cmds ...Command) *TaskGroup {
+func (g *TaskGroup) TeardownTaskCommand(cmds ...Command) *TaskGroup {
 	for _, c := range cmds {
 		if err := c.Validate(); err != nil {
 			panic(err)
 		}
-		g.TeardownTaskCmds = append(g.TeardownTaskCmds, c.Resolve())
+		g.TeardownTask = append(g.TeardownTask, c.Resolve())
 	}
 	return g
 }
 
-func (g *TaskGroup) TeardownGroup(cmds ...Command) *TaskGroup {
+func (g *TaskGroup) TeardownGroupCommand(cmds ...Command) *TaskGroup {
 	for _, c := range cmds {
 		if err := c.Validate(); err != nil {
 			panic(err)
 		}
-		g.TeardownGroupCmds = append(g.TeardownGroupCmds, c.Resolve())
+		g.TeardownGroup = append(g.TeardownGroup, c.Resolve())
 	}
 	return g
 }
 
-func (g *TaskGroup) Timeout(cmds ...Command) *TaskGroup {
+func (g *TaskGroup) TimeoutCommand(cmds ...Command) *TaskGroup {
 	for _, c := range cmds {
 		if err := c.Validate(); err != nil {
 			panic(err)
 		}
-		g.TimeoutCmds = append(g.TimeoutCmds, c.Resolve())
+		g.Timeout = append(g.Timeout, c.Resolve())
 	}
 	return g
 }
