@@ -1,6 +1,8 @@
 package shrub
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestTaskBuilder(t *testing.T) {
 	cases := map[string]func(t *testing.T, task *Task){
@@ -27,11 +29,10 @@ func TestTaskBuilder(t *testing.T) {
 			assert(t, task.Dependencies[2].Name == "bar")
 		},
 		"PrioritySetter": func(t *testing.T, task *Task) {
-			assert(t, task.PriorityOverride == 0)
+			require(t, task.PriorityOverride == 0, "default")
 			t2 := task.Priority(42)
 			assert(t, task == t2, "chainable")
 			assert(t, task.PriorityOverride == 42)
-
 		},
 		"PriorityOverride": func(t *testing.T, task *Task) {
 			task.Priority(9001)
@@ -39,6 +40,62 @@ func TestTaskBuilder(t *testing.T) {
 
 			task.Priority(0)
 			assert(t, task.PriorityOverride == 0)
+		},
+		"ExecTimeoutSetter": func(t *testing.T, task *Task) {
+			require(t, task.ExecTimeoutSecs == 0, "default")
+			task.ExecTimeout(50)
+			assert(t, task.ExecTimeoutSecs == 50)
+
+			task.ExecTimeout(0)
+			assert(t, task.ExecTimeoutSecs == 0)
+		},
+		"PatchableSetter": func(t *testing.T, task *Task) {
+			require(t, task.IsPatchable == nil, "default")
+			task.Patchable(true)
+			assert(t, task.IsPatchable != nil && *task.IsPatchable)
+
+			task.Patchable(false)
+			assert(t, task.IsPatchable != nil && !*task.IsPatchable)
+		},
+		"PatchOnlySetter": func(t *testing.T, task *Task) {
+			require(t, task.IsPatchOnly == nil, "default")
+			task.PatchOnly(true)
+			assert(t, task.IsPatchOnly != nil && *task.IsPatchOnly)
+
+			task.PatchOnly(false)
+			assert(t, task.IsPatchOnly != nil && !*task.IsPatchOnly)
+		},
+		"AllowForGitTagSetter": func(t *testing.T, task *Task) {
+			require(t, task.IsAllowedForGitTag == nil, "default")
+			task.AllowForGitTag(true)
+			assert(t, task.IsAllowedForGitTag != nil && *task.IsAllowedForGitTag)
+
+			task.AllowForGitTag(false)
+			assert(t, task.IsAllowedForGitTag != nil && !*task.IsAllowedForGitTag)
+		},
+		"GitTagOnlySetter": func(t *testing.T, task *Task) {
+			require(t, task.IsGitTagOnly == nil, "default")
+			task.GitTagOnly(true)
+			assert(t, task.IsGitTagOnly != nil && *task.IsGitTagOnly)
+
+			task.GitTagOnly(false)
+			assert(t, task.IsGitTagOnly != nil && !*task.IsGitTagOnly)
+		},
+		"StepbackSetter": func(t *testing.T, task *Task) {
+			require(t, task.CanStepback == nil, "default")
+			task.Stepback(true)
+			assert(t, task.CanStepback != nil && *task.CanStepback)
+
+			task.Stepback(false)
+			assert(t, task.CanStepback != nil && !*task.CanStepback)
+		},
+		"MustHaveTestResultsSetter": func(t *testing.T, task *Task) {
+			require(t, task.MustHaveResults == nil, "default")
+			task.MustHaveTestResults(true)
+			assert(t, task.MustHaveResults != nil && *task.MustHaveResults)
+
+			task.MustHaveTestResults(false)
+			assert(t, task.MustHaveResults != nil && !*task.MustHaveResults)
 		},
 		"AddCommand": func(t *testing.T, task *Task) {
 			assert(t, len(task.Commands) == 0, "default value")
@@ -107,6 +164,17 @@ func TestTaskBuilder(t *testing.T) {
 			require(t, task.Commands[0].Vars != nil)
 			assert(t, task.Commands[0].Vars["a"] == "val")
 		},
+		"TagAdder": func(t *testing.T, task *Task) {
+			require(t, len(task.Tags) == 0, "default")
+			task.Tag()
+			assert(t, len(task.Tags) == 0, "noop")
+			task.Tag("one")
+			assert(t, len(task.Tags) == 1, "first")
+			task.Tag("two")
+			assert(t, len(task.Tags) == 2, "add again")
+			task.Tag("two", "43")
+			assert(t, len(task.Tags) == 4, "multi add without deduplicating")
+		},
 	}
 
 	for name, test := range cases {
@@ -132,6 +200,14 @@ func TestTaskGroup(t *testing.T) {
 		g.SetMaxHosts(1066)
 		assert(t, g.MaxHosts == 1066)
 	})
+	t.Run("ShareProcessesSetter", func(t *testing.T) {
+		g := &TaskGroup{}
+		require(t, !g.ShareProcesses)
+		g.SetShareProcesses(true)
+		assert(t, g.ShareProcesses, "set share processes")
+		g.SetShareProcesses(false)
+		assert(t, !g.ShareProcesses, "unset share processes")
+	})
 	t.Run("TaskAdder", func(t *testing.T) {
 		g := &TaskGroup{}
 		assert(t, len(g.Tasks) == 0, "default value")
@@ -143,5 +219,103 @@ func TestTaskGroup(t *testing.T) {
 		assert(t, len(g.Tasks) == 2, "no deduplicate")
 		g.Task("two", "43")
 		assert(t, len(g.Tasks) == 4, "multi add")
+	})
+	t.Run("SetupGroupAdder", func(t *testing.T) {
+		g := &TaskGroup{}
+		assert(t, len(g.SetupGroupCmds) == 0, "default value")
+		g.SetupGroup()
+		assert(t, len(g.SetupGroupCmds) == 0, "noop")
+		g.SetupGroup(CmdExecShell{})
+		assert(t, len(g.SetupGroupCmds) == 1, "first command")
+		g.SetupGroup(CmdExec{})
+		assert(t, len(g.SetupGroupCmds) == 2, "no deduplicate")
+		g.SetupGroup(CmdExecShell{}, CmdExec{})
+		assert(t, len(g.SetupGroupCmds) == 4, "multi add")
+		defer expect(t, "adding invalid command should panic")
+		g.SetupGroup(CmdS3Put{})
+	})
+	t.Run("SetupGroupCanFailTaskSetter", func(t *testing.T) {
+		g := &TaskGroup{}
+		require(t, !g.SetupGroupCanFailTask)
+		g.SetSetupGroupCanFailTask(true)
+		assert(t, g.SetupGroupCanFailTask, "setup group can fail tasks")
+		g.SetSetupGroupCanFailTask(false)
+		assert(t, !g.SetupGroupCanFailTask, "setup group cannot fail tasks")
+	})
+	t.Run("SetupGroupTimeoutSecsSetter", func(t *testing.T) {
+		g := &TaskGroup{}
+		require(t, !g.SetupGroupCanFailTask)
+		g.SetSetupGroupTimeoutSecs(100)
+		assert(t, g.SetupGroupTimeoutSecs == 100, "set setup group timeout secs")
+		g.SetSetupGroupTimeoutSecs(0)
+		assert(t, g.SetupGroupTimeoutSecs == 0, "unset setup group timeout secs")
+	})
+	t.Run("SetupTaskAdder", func(t *testing.T) {
+		g := &TaskGroup{}
+		assert(t, len(g.SetupTaskCmds) == 0, "default value")
+		g.SetupTask()
+		assert(t, len(g.SetupTaskCmds) == 0, "noop")
+		g.SetupTask(CmdExecShell{})
+		assert(t, len(g.SetupTaskCmds) == 1, "first command")
+		g.SetupTask(CmdExec{})
+		assert(t, len(g.SetupTaskCmds) == 2, "no deduplicate")
+		g.SetupTask(CmdExecShell{}, CmdExec{})
+		assert(t, len(g.SetupTaskCmds) == 4, "multi add")
+		defer expect(t, "adding invalid command should panic")
+		g.SetupTask(CmdS3Put{})
+	})
+	t.Run("TeardownTaskAdder", func(t *testing.T) {
+		g := &TaskGroup{}
+		assert(t, len(g.TeardownTaskCmds) == 0, "default value")
+		g.TeardownTask()
+		assert(t, len(g.TeardownTaskCmds) == 0, "noop")
+		g.TeardownTask(CmdExecShell{})
+		assert(t, len(g.TeardownTaskCmds) == 1, "first command")
+		g.TeardownTask(CmdExec{})
+		assert(t, len(g.TeardownTaskCmds) == 2, "no deduplicate")
+		g.TeardownTask(CmdExecShell{}, CmdExec{})
+		assert(t, len(g.TeardownTaskCmds) == 4, "multi add")
+		defer expect(t, "adding invalid command should panic")
+		g.TeardownTask(CmdS3Put{})
+	})
+	t.Run("TeardownGroupAdder", func(t *testing.T) {
+		g := &TaskGroup{}
+		assert(t, len(g.TeardownGroupCmds) == 0, "default value")
+		g.TeardownGroup()
+		assert(t, len(g.TeardownGroupCmds) == 0, "noop")
+		g.TeardownGroup(CmdExecShell{})
+		assert(t, len(g.TeardownGroupCmds) == 1, "first command")
+		g.TeardownGroup(CmdExec{})
+		assert(t, len(g.TeardownGroupCmds) == 2, "no deduplicate")
+		g.TeardownGroup(CmdExecShell{}, CmdExec{})
+		assert(t, len(g.TeardownGroupCmds) == 4, "multi add")
+		defer expect(t, "adding invalid command should panic")
+		g.TeardownGroup(CmdS3Put{})
+	})
+	t.Run("TimeoutAdder", func(t *testing.T) {
+		g := &TaskGroup{}
+		assert(t, len(g.TimeoutCmds) == 0, "default value")
+		g.Timeout()
+		assert(t, len(g.TimeoutCmds) == 0, "noop")
+		g.Timeout(CmdExecShell{})
+		assert(t, len(g.TimeoutCmds) == 1, "first command")
+		g.Timeout(CmdExec{})
+		assert(t, len(g.TimeoutCmds) == 2, "no deduplicate")
+		g.Timeout(CmdExecShell{}, CmdExec{})
+		assert(t, len(g.TimeoutCmds) == 4, "multi add")
+		defer expect(t, "adding invalid command should panic")
+		g.Timeout(CmdS3Put{})
+	})
+	t.Run("TagAdder", func(t *testing.T) {
+		g := &TaskGroup{}
+		require(t, len(g.Tags) == 0, "default value")
+		g.Tag()
+		assert(t, len(g.Tags) == 0, "noop")
+		g.Tag("one")
+		assert(t, len(g.Tags) == 1, "first")
+		g.Tag("two")
+		assert(t, len(g.Tags) == 2, "add again")
+		g.Tag("two", "43")
+		assert(t, len(g.Tags) == 4, "multi add without deduplicating")
 	})
 }
