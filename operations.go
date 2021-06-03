@@ -253,6 +253,21 @@ func (c CmdS3Pull) Resolve() *CommandDefinition {
 }
 func s3PullFactory() Command { return CmdS3Pull{} }
 
+type CmdSetExpansions struct {
+	YamlFile          string `json:"file" yaml:"file"`
+	IgnoreMissingFile string `json:"ignore_missing_file" yaml:"ignore_missing_file"`
+}
+
+func (c CmdSetExpansions) Name() string    { return "downstream_expansions.set" }
+func (c CmdSetExpansions) Validate() error { return nil }
+func (c CmdSetExpansions) Resolve() *CommandDefinition {
+	return &CommandDefinition{
+		CommandName: c.Name(),
+		Params:      exportCmd(c),
+	}
+}
+func setExpansionsFactory() Command { return CmdSetExpansions{} }
+
 type CmdGetProject struct {
 	Directory         string            `json:"directory" yaml:"directory"`
 	Token             string            `json:"token,omitempty" yaml:"token,omitempty"`
