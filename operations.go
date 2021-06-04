@@ -254,7 +254,7 @@ func (c CmdS3Pull) Resolve() *CommandDefinition {
 func s3PullFactory() Command { return CmdS3Pull{} }
 
 type CmdSetExpansions struct {
-	YamlFile          string `json:"file" yaml:"file"`
+	YAMLFile          string `json:"file" yaml:"file"`
 	IgnoreMissingFile string `json:"ignore_missing_file" yaml:"ignore_missing_file"`
 }
 
