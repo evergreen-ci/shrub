@@ -16,6 +16,7 @@ func init() {
 		subprocessExecFactory,
 		shellExecFactory,
 		subprocessScriptingFactory,
+		setExpansionsFactory,
 		s3PutFactory,
 		s3GetFactory,
 		s3CopyFactory,
