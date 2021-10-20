@@ -46,9 +46,9 @@ endif
 
 ifneq (,$(RACE_DETECTOR))
 # cgo is required for using the race detector.
-export CGO_ENABLED=1
+export CGO_ENABLED := 1
 else
-export CGO_ENABLED=0
+export CGO_ENABLED := 0
 endif
 # end environment setup
 
