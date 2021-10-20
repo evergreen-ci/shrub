@@ -13,9 +13,13 @@ ifneq (,$(GOROOT))
 gobin := $(GOROOT)/bin/go
 endif
 
-gocache := $(GOCACHE)
-ifeq (,$(gocache))
-gocache := $(abspath $(buildDir)/.cache)
+goCache := $(GOCACHE)
+ifeq (,$(goCache))
+goCache := $(abspath $(buildDir)/.cache)
+endif
+goModCache := $(GOMODCACHE)
+ifeq (,$(goModCache))
+goModCache := $(abspath $(buildDir)/.mod-cache)
 endif
 lintCache := $(GOLANGCI_LINT_CACHE)
 ifeq (,$(lintCache))
@@ -24,13 +28,17 @@ endif
 
 ifeq ($(OS),Windows_NT)
 gobin := $(shell cygpath $(gobin))
-gocache := $(shell cygpath -m $(gocache))
+goCache := $(shell cygpath -m $(goCache))
+goModCache := $(shell cygpath -m $(goModCache))
 lintCache := $(shell cygpath -m $(lintCache))
 export GOROOT := $(shell cygpath -m $(GOROOT))
 endif
 
-ifneq ($(gocache),$(GOCACHE))
-export GOCACHE := $(gocache)
+ifneq ($(goCache),$(GOCACHE))
+export GOCACHE := $(goCache)
+endif
+ifneq ($(goModCache),$(GOMODCACHE))
+export GOMODCACHE := $(goModCache)
 endif
 ifneq ($(lintCache),$(GOLANGCI_LINT_CACHE))
 export GOLANGCI_LINT_CACHE := $(lintCache)
