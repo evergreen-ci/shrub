@@ -1,9 +1,9 @@
 command_type: test
 stepback: false
 ignore:
-  - "*.md" # don't schedule tests if a commit only changes markdown files
-  - "*.rst" # don't schedule tests if a commit only changes rst files
-  - ".github/*" # github CODEOWNERS configuration
+  - "*.md"
+  - "*.rst"
+  - ".github/*"
 
 #######################################
 #         YAML Templates              #
