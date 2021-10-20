@@ -26,22 +26,22 @@ functions:
     - command: git.get_project
       type: system
       params:
-        directory: ${workdir}
+        directory: ${workdir}/shrub
     - command: subprocess.exec
       type: setup
       params:
-        working_dir: ${workdir}
+        working_dir: ${workdir}/shrub
         binary: make
         args: ["mod-tidy"]
-        include_expansions_in_env: ["GOROOT"]
+        include_expansions_in_env: ["GOPATH", "GOROOT"]
   run-make:
     command: subprocess.exec
     type: test
     params:
-      working_dir: ${workdir}
+      working_dir: ${workdir}/shrub
       binary: make
       args: ["${target}"]
-      include_expansions_in_env: ["DISABLE_COVERAGE", "GOROOT", "RACE_DETECTOR"]
+      include_expansions_in_env: ["DISABLE_COVERAGE", "GOPATH", "GOROOT", "RACE_DETECTOR"]
   parse-results:
     command: gotest.parse_files
     type: setup
@@ -75,6 +75,7 @@ buildvariants:
     display_name: Lint (Arch Linux)
     expansions:
       DISABLE_COVERAGE: true
+      GOPATH: ${workdir}/gopath
       GOROOT: /opt/golang/go1.16
     run_on:
       - archlinux-new-small
@@ -86,6 +87,7 @@ buildvariants:
     display_name: Ubuntu 18.04
     expansions:
       DISABLE_COVERAGE: true
+      GOPATH: ${workdir}/gopath
       GOROOT: /opt/golang/go1.16
     run_on:
       - ubuntu1804-small
