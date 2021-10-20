@@ -26,7 +26,6 @@ ifeq ($(OS),Windows_NT)
 gobin := $(shell cygpath $(gobin))
 gocache := $(shell cygpath -m $(gocache))
 lintCache := $(shell cygpath -m $(lintCache))
-export GOPATH := $(shell cygpath -m $(GOPATH))
 export GOROOT := $(shell cygpath -m $(GOROOT))
 endif
 
@@ -37,7 +36,6 @@ ifneq ($(lintCache),$(GOLANGCI_LINT_CACHE))
 export GOLANGCI_LINT_CACHE := $(lintCache)
 endif
 
-export GO111MODULE := off
 ifneq (,$(RACE_DETECTOR))
 # cgo is required for using the race detector.
 export CGO_ENABLED=1
@@ -124,6 +122,12 @@ $(buildDir)/output.%.lint: $(buildDir)/run-linter .FORCE
 	@$(lintEnvVars) ./$< --output=$@ --lintBin=$(buildDir)/golangci-lint --packages='$*'
 # end test and coverage artifacts
 # end basic development operations
+
+# start module management targets
+mod-tidy:
+	$(gobin) mod tidy
+phony += mod-tidy
+# end module management targets
 
 # start cleanup targets
 clean:
