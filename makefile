@@ -50,8 +50,6 @@ export CGO_ENABLED := 1
 else
 export CGO_ENABLED := 0
 endif
-
-export GOFLAGS += -modcacherw
 # end environment setup
 
 # Ensure the build directory exists, since most targets require it.
