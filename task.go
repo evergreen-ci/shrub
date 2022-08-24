@@ -110,7 +110,7 @@ func (t *Task) MustHaveTestResults(val bool) *Task {
 type TaskGroup struct {
 	GroupName             string          `json:"name" yaml:"name"`
 	MaxHosts              int             `json:"max_hosts,omitempty" yaml:"max_hosts,omitempty"`
-	ShareProcesses        bool            `json:"share_processes,omitempty" yaml:"share_processes,omitemtpy"`
+	ShareProcesses        bool            `json:"share_processes,omitempty" yaml:"share_processes,omitempty"`
 	SetupGroup            CommandSequence `json:"setup_group,omitempty" yaml:"setup_group,omitempty"`
 	SetupGroupCanFailTask bool            `json:"setup_group_can_fail_task,omitempty" yaml:"setup_group_can_fail_task,omitempty"`
 	SetupGroupTimeoutSecs int             `json:"setup_group_timeout_secs,omitempty" yaml:"setup_group_timeout_secs,omitempty"`
