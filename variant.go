@@ -4,10 +4,14 @@ type Variant struct {
 	BuildName        string                  `json:"name,omitempty" yaml:"name,omitempty"`
 	BuildDisplayName string                  `json:"display_name,omitempty" yaml:"display_name,omitempty"`
 	BatchTimeSecs    int                     `json:"batchtime,omitempty" yaml:"batchtime,omitempty"`
+	CronBatchTime    string                  `yaml:"cron,omitempty" bson:"cron,omitempty"`
+	Stepback         bool                    `yaml:"stepback,omitempty" bson:"stepback,omitempty"`
 	TaskSpecs        []TaskSpec              `json:"tasks,omitmepty" yaml:"tasks,omitempty"`
 	DistroRunOn      []string                `json:"run_on,omitempty" yaml:"run_on,omitempty"`
 	Expansions       map[string]interface{}  `json:"expansions,omitempty" yaml:"expansions,omitempty"`
 	DisplayTaskSpecs []DisplayTaskDefinition `json:"display_tasks,omitempty" yaml:"display_tasks,omitempty"`
+	// If Activate is set to false, then we don't initially activate the build variant.
+	Activate bool `yaml:"activate,omitempty" bson:"activate,omitempty"`
 }
 
 type DisplayTaskDefinition struct {
