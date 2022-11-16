@@ -27,6 +27,7 @@ type TaskSpec struct {
 
 func (v *Variant) Name(id string) *Variant                         { v.BuildName = id; return v }
 func (v *Variant) BatchTime(batchTimeSecs int) *Variant            { v.BatchTimeSecs = batchTimeSecs; return v }
+func (v *Variant) SetCronBatchTime(batchTime string) *Variant      { v.CronBatchTime = batchTime; return v }
 func (v *Variant) SetStepback(stepback *bool) *Variant             { v.Stepback = stepback; return v }
 func (v *Variant) SetActivate(activate *bool) *Variant             { v.Activate = activate; return v }
 func (v *Variant) DisplayName(id string) *Variant                  { v.BuildDisplayName = id; return v }
