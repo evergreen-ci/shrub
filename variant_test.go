@@ -16,6 +16,32 @@ func TestVariantBuilders(t *testing.T) {
 			assert(t, v.BuildDisplayName == "foo", "expected value")
 			assert(t, v2 == v, "chainable")
 		},
+		"BatchTimeSetter": func(t *testing.T, v *Variant) {
+			assert(t, v.BatchTimeSecs == 0, "default value")
+			v2 := v.BatchTime(12)
+			assert(t, v.BatchTimeSecs == 12, "exected value")
+			assert(t, v2 == v, "chainable")
+		},
+		"CronBatchTimeSetter": func(t *testing.T, v *Variant) {
+			assert(t, v.CronBatchTime == "", "default value")
+			v2 := v.SetCronBatchTime("12")
+			assert(t, v.CronBatchTime == "12", "expected value")
+			assert(t, v2 == v, "chainable")
+		},
+		"StepbackSetter": func(t *testing.T, v *Variant) {
+			assert(t, v.Stepback == nil, "default value")
+			stepbackVal := true
+			v2 := v.SetStepback(&stepbackVal)
+			assert(t, *v.Stepback == stepbackVal, "expected value")
+			assert(t, v2 == v, "chainable")
+		},
+		"ActivateSetter": func(t *testing.T, v *Variant) {
+			assert(t, v.Activate == nil, "default value")
+			activateVal := false
+			v2 := v.SetActivate(&activateVal)
+			assert(t, *v.Activate == activateVal, "expected value")
+			assert(t, v2 == v, "chainable")
+		},
 		"RunOnSetter": func(t *testing.T, v *Variant) {
 			assert(t, len(v.DistroRunOn) == 0, "default value")
 			v2 := v.RunOn("foo")

@@ -4,10 +4,14 @@ type Variant struct {
 	BuildName        string                  `json:"name,omitempty" yaml:"name,omitempty"`
 	BuildDisplayName string                  `json:"display_name,omitempty" yaml:"display_name,omitempty"`
 	BatchTimeSecs    int                     `json:"batchtime,omitempty" yaml:"batchtime,omitempty"`
+	CronBatchTime    string                  `yaml:"cron,omitempty" bson:"cron,omitempty"`
+	Stepback         *bool                   `yaml:"stepback,omitempty" bson:"stepback,omitempty"`
 	TaskSpecs        []TaskSpec              `json:"tasks,omitmepty" yaml:"tasks,omitempty"`
 	DistroRunOn      []string                `json:"run_on,omitempty" yaml:"run_on,omitempty"`
 	Expansions       map[string]interface{}  `json:"expansions,omitempty" yaml:"expansions,omitempty"`
 	DisplayTaskSpecs []DisplayTaskDefinition `json:"display_tasks,omitempty" yaml:"display_tasks,omitempty"`
+	// If Activate is set to false, then we don't initially activate the build variant.
+	Activate *bool `yaml:"activate,omitempty" bson:"activate,omitempty"`
 }
 
 type DisplayTaskDefinition struct {
@@ -22,10 +26,15 @@ type TaskSpec struct {
 }
 
 func (v *Variant) Name(id string) *Variant                         { v.BuildName = id; return v }
+func (v *Variant) BatchTime(batchTimeSecs int) *Variant            { v.BatchTimeSecs = batchTimeSecs; return v }
+func (v *Variant) SetCronBatchTime(batchTime string) *Variant      { v.CronBatchTime = batchTime; return v }
+func (v *Variant) SetStepback(stepback *bool) *Variant             { v.Stepback = stepback; return v }
+func (v *Variant) SetActivate(activate *bool) *Variant             { v.Activate = activate; return v }
 func (v *Variant) DisplayName(id string) *Variant                  { v.BuildDisplayName = id; return v }
 func (v *Variant) RunOn(distro string) *Variant                    { v.DistroRunOn = []string{distro}; return v }
 func (v *Variant) TaskSpec(spec TaskSpec) *Variant                 { v.TaskSpecs = append(v.TaskSpecs, spec); return v }
 func (v *Variant) SetExpansions(m map[string]interface{}) *Variant { v.Expansions = m; return v }
+
 func (v *Variant) Expansion(k string, val interface{}) *Variant {
 	if v.Expansions == nil {
 		v.Expansions = make(map[string]interface{})
