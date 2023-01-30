@@ -142,6 +142,7 @@ type CmdS3Put struct {
 	LocalFile                     string   `json:"local_file,omitempty" yaml:"local_file,omitempty"`
 	LocalFilesIncludeFilter       []string `json:"local_files_include_filter,omitempty" yaml:"local_files_include_filter,omitempty"`
 	LocalFilesIncludeFilterPrefix string   `json:"local_files_include_filter_prefix,omitempty" yaml:"local_files_include_filter_prefix,omitempty"`
+	PreservePath                  string   `json:"preserve_path,omitempty" yaml:"preserve_path,omitempty"`
 	RemoteFile                    string   `json:"remote_file" yaml:"remote_file"`
 	ResourceDisplayName           string   `json:"display_name,omitempty" yaml:"display_name,omitempty"`
 	BuildVariants                 []string `json:"build_variants,omitempty" yaml:"build_variants,omitempty"`
