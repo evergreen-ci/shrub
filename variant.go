@@ -32,8 +32,8 @@ func (ts *TaskSpec) SetStepback(shouldStepback bool) *TaskSpec {
 	return ts
 }
 func (ts *TaskSpec) SetDistros(distros []string) *TaskSpec { ts.Distro = distros; return ts }
-func (ts *TaskSpec) SetActivate(shouldActivate bool) *TaskSpec {
-	ts.Activate = &shouldActivate
+func (ts *TaskSpec) SetActivate(shouldActivate *bool) *TaskSpec {
+	ts.Activate = shouldActivate
 	return ts
 }
 

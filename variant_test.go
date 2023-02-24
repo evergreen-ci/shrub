@@ -176,7 +176,7 @@ func TestTaskSpecBuilders(t *testing.T) {
 		},
 		"ActivateSetter": func(t *testing.T, ts *TaskSpec) {
 			assert(t, ts.Activate == nil, "default value")
-			ts2 := ts.SetActivate(true)
+			ts2 := ts.SetActivate(&trueVal)
 			require(t, ts.Activate != nil)
 			assert(t, *ts.Activate, "expected value")
 			assert(t, ts2 == ts, "chainable")
