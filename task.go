@@ -17,7 +17,23 @@ type Task struct {
 
 type TaskDependency struct {
 	Name    string `json:"name" yaml:"name"`
-	Variant string `json:"variant" yaml:"variant"`
+	Variant string `json:"variant,omitempty" yaml:"variant,omitempty"`
+	Status  string `json:"status,omitempty" yaml:"status,omitempty"`
+}
+
+func (td *TaskDependency) SetName(name string) *TaskDependency {
+	td.Name = name
+	return td
+}
+
+func (td *TaskDependency) SetVariant(variant string) *TaskDependency {
+	td.Variant = variant
+	return td
+}
+
+func (td *TaskDependency) SetStatus(status string) *TaskDependency {
+	td.Status = status
+	return td
 }
 
 func (t *Task) Command(cmds ...Command) *Task {

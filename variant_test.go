@@ -1,6 +1,8 @@
 package shrub
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestVariantBuilders(t *testing.T) {
 	cases := map[string]func(*testing.T, *Variant){
@@ -19,7 +21,7 @@ func TestVariantBuilders(t *testing.T) {
 		"BatchTimeSetter": func(t *testing.T, v *Variant) {
 			assert(t, v.BatchTimeSecs == 0, "default value")
 			v2 := v.BatchTime(12)
-			assert(t, v.BatchTimeSecs == 12, "exected value")
+			assert(t, v.BatchTimeSecs == 12, "expected value")
 			assert(t, v2 == v, "chainable")
 		},
 		"CronBatchTimeSetter": func(t *testing.T, v *Variant) {
@@ -147,6 +149,44 @@ func TestVariantBuilders(t *testing.T) {
 		v := &Variant{}
 		t.Run(name, func(t *testing.T) {
 			test(t, v)
+		})
+	}
+}
+
+func TestTaskSpecBuilders(t *testing.T) {
+	cases := map[string]func(*testing.T, *TaskSpec){
+		"NameSetter": func(t *testing.T, ts *TaskSpec) {
+			assert(t, ts.Name == "", "default value")
+			ts2 := ts.SetName("foo")
+			assert(t, ts.Name == "foo", "expected value")
+			assert(t, ts2 == ts, "chainable")
+		},
+		"StepbackSetter": func(t *testing.T, ts *TaskSpec) {
+			assert(t, ts.Stepback == false, "default value")
+			ts2 := ts.SetStepback(true)
+			assert(t, ts.Stepback, "expected value")
+			assert(t, ts2 == ts, "chainable")
+		},
+		"DistroSetter": func(t *testing.T, ts *TaskSpec) {
+			assert(t, len(ts.Distro) == 0, "default value")
+			ts2 := ts.SetDistros([]string{"distro"})
+			require(t, len(ts.Distro) == 1, "state impacted")
+			assert(t, ts.Distro[0] == "distro", "expected value")
+			assert(t, ts2 == ts, "chainable")
+		},
+		"ActivateSetter": func(t *testing.T, ts *TaskSpec) {
+			assert(t, ts.Activate == nil, "default value")
+			ts2 := ts.SetActivate(true)
+			require(t, ts.Activate != nil)
+			assert(t, *ts.Activate, "expected value")
+			assert(t, ts2 == ts, "chainable")
+		},
+	}
+
+	for name, test := range cases {
+		ts := &TaskSpec{}
+		t.Run(name, func(t *testing.T) {
+			test(t, ts)
 		})
 	}
 }
