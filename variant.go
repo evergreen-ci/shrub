@@ -11,7 +11,7 @@ type Variant struct {
 	Expansions       map[string]interface{}  `json:"expansions,omitempty" yaml:"expansions,omitempty"`
 	DisplayTaskSpecs []DisplayTaskDefinition `json:"display_tasks,omitempty" yaml:"display_tasks,omitempty"`
 	// If Activate is set to false, then we don't initially activate the build variant.
-	Activate *bool `yaml:"activate,omitempty" bson:"activate,omitempty"`
+	Activate *bool `json:"activate" yaml:"activate,omitempty"`
 }
 
 type DisplayTaskDefinition struct {
@@ -23,6 +23,18 @@ type TaskSpec struct {
 	Name     string   `json:"name" yaml:"name"`
 	Stepback bool     `json:"stepback,omitempty" yaml:"stepback,omitempty"`
 	Distro   []string `json:"distros,omitempty" yaml:"distro,omitempty"`
+	Activate *bool    `json:"activate,omitempty" yaml:"activate,omitempty"`
+}
+
+func (ts *TaskSpec) SetName(name string) *TaskSpec { ts.Name = name; return ts }
+func (ts *TaskSpec) SetStepback(shouldStepback bool) *TaskSpec {
+	ts.Stepback = shouldStepback
+	return ts
+}
+func (ts *TaskSpec) SetDistros(distros []string) *TaskSpec { ts.Distro = distros; return ts }
+func (ts *TaskSpec) SetActivate(shouldActivate *bool) *TaskSpec {
+	ts.Activate = shouldActivate
+	return ts
 }
 
 func (v *Variant) Name(id string) *Variant                         { v.BuildName = id; return v }

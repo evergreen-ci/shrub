@@ -4,6 +4,8 @@ import (
 	"testing"
 )
 
+var trueVal = true
+
 func TestTaskBuilder(t *testing.T) {
 	cases := map[string]func(t *testing.T, task *Task){
 		"DependencySetterNoop": func(t *testing.T, task *Task) {
@@ -13,10 +15,16 @@ func TestTaskBuilder(t *testing.T) {
 			assert(t, len(task.Dependencies) == 0, "not changed")
 		},
 		"DependencySetterOne": func(t *testing.T, task *Task) {
-			t2 := task.Dependency(TaskDependency{Name: "foo"})
+			t2 := task.Dependency(TaskDependency{
+				Name:    "foo",
+				Status:  "*",
+				Variant: "variant",
+			})
 			assert(t, task == t2, "chainable")
-			assert(t, len(task.Dependencies) == 1, "not changed")
+			require(t, len(task.Dependencies) == 1, "not changed")
 			assert(t, task.Dependencies[0].Name == "foo")
+			assert(t, task.Dependencies[0].Status == "*")
+			assert(t, task.Dependencies[0].Variant == "variant")
 		},
 		"DependencySetterDuplicate": func(t *testing.T, task *Task) {
 			t2 := task.Dependency(TaskDependency{Name: "foo"}).Dependency(
@@ -183,6 +191,27 @@ func TestTaskBuilder(t *testing.T) {
 			test(t, task)
 		})
 	}
+}
+
+func TestTaskDependency(t *testing.T) {
+	t.Run("NameSetter", func(t *testing.T) {
+		td := &TaskDependency{}
+		assert(t, td.Name == "")
+		td.SetName("name")
+		assert(t, td.Name == "name")
+	})
+	t.Run("VariantSetter", func(t *testing.T) {
+		td := &TaskDependency{}
+		assert(t, td.Variant == "")
+		td.SetVariant("variant")
+		assert(t, td.Variant == "variant")
+	})
+	t.Run("StatusSetter", func(t *testing.T) {
+		td := &TaskDependency{}
+		assert(t, td.Status == "")
+		td.SetStatus("failed")
+		assert(t, td.Status == "failed")
+	})
 }
 
 func TestTaskGroup(t *testing.T) {
