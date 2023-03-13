@@ -4,8 +4,8 @@ type Variant struct {
 	BuildName        string                  `json:"name,omitempty" yaml:"name,omitempty"`
 	BuildDisplayName string                  `json:"display_name,omitempty" yaml:"display_name,omitempty"`
 	BatchTimeSecs    int                     `json:"batchtime,omitempty" yaml:"batchtime,omitempty"`
-	CronBatchTime    string                  `yaml:"cron,omitempty" bson:"cron,omitempty"`
-	Stepback         *bool                   `yaml:"stepback,omitempty" bson:"stepback,omitempty"`
+	CronBatchTime    string                  `json:"cron,omitempty" yaml:"cron,omitempty"`
+	Stepback         *bool                   `json:"stepback,omitempty" yaml:"stepback,omitempty""`
 	TaskSpecs        []TaskSpec              `json:"tasks,omitmepty" yaml:"tasks,omitempty"`
 	DistroRunOn      []string                `json:"run_on,omitempty" yaml:"run_on,omitempty"`
 	Expansions       map[string]interface{}  `json:"expansions,omitempty" yaml:"expansions,omitempty"`
