@@ -81,56 +81,6 @@ func (c CmdExecShell) Resolve() *CommandDefinition {
 }
 func shellExecFactory() Command { return CmdExecShell{} }
 
-type ScriptingTestOptions struct {
-	Name        string   `json:"name,omitempty" yaml:"name,omitempty"`
-	Args        []string `json:"args,omitempty" yaml:"args,omitempty"`
-	Pattern     string   `json:"pattern,omitempty" yaml:"pattern,omitempty"`
-	TimeoutSecs int      `json:"timeout_secs,omitempty" yaml:"timeout_secs,omitempty"`
-	Count       int      `json:"count,omitempty" yaml:"count,omitempty"`
-}
-
-type CmdSubprocessScripting struct {
-	Harness                       string                `json:"harness" yaml:"harness"`
-	Command                       string                `json:"command,omitempty" yaml:"command,omitempty"`
-	Args                          []string              `json:"args,omitempty" yaml:"args,omitempty"`
-	TestDir                       string                `json:"test_dir,omitempty" yaml:"test_dir,omitempty"`
-	TestOptions                   *ScriptingTestOptions `json:"test_options,omitempty" yaml:"test_options,omitempty"`
-	Report                        bool                  `json:"report,omitempty" yaml:"report,omitempty"`
-	Script                        string                `json:"script,omitempty" yaml:"script,omitempty"`
-	ContinueOnError               bool                  `json:"continue_on_err,omitempty" yaml:"continue_on_err,omitempty"`
-	Silent                        bool                  `json:"silent,omitempty" yaml:"silent,omitempty"`
-	Path                          []string              `json:"add_to_path,omitempty" yaml:"path,omitempty"`
-	Env                           map[string]string     `json:"env,omitempty" yaml:"env,omitempty"`
-	AddExpansionsToEnv            bool                  `json:"add_expansions_to_env,omitempty" yaml:"add_expansions_to_env,omitempty"`
-	IncludeExpansionsInEnv        []string              `json:"include_expansions_in_env,omitempty" yaml:"include_expansions_in_env,omitempty"`
-	RedirectStandardErrorToOutput bool                  `json:"redirect_standard_error_to_output,omitempty" yaml:"redirect_standard_error_to_output,omitempty"`
-	IgnoreStandardOutput          bool                  `json:"ignore_standard_out,omitempty" yaml:"ignore_standard_out,omitempty"`
-	IgnoreStandardError           bool                  `json:"ignore_standard_error,omitempty" yaml:"ignore_standard_error,omitempty"`
-	SystemLog                     bool                  `json:"system_log,omitempty" yaml:"system_log,omitempty"`
-	WorkingDir                    string                `json:"working_dir,omitempty" yaml:"working_dir,omitempty"`
-	CacheDurationSeconds          int                   `json:"cache_duration_secs,omitempty" yaml:"cache_duration_secs,omitempty"`
-	CleanupHarness                bool                  `json:"cleanup_harness,omitempty" yaml:"cleanup_harness,omitempty"`
-	LockFile                      string                `json:"lock_file,omitempty" yaml:"lock_file,omitempty"`
-	Packages                      []string              `json:"packages,omitempty" yaml:"packages,omitempty"`
-	HarnessPath                   string                `json:"harness_path,omitempty" yaml:"harness_path,omitempty"`
-	HostPath                      string                `json:"host_path,omitempty" yaml:"host_path,omitempty"`
-}
-
-func (c CmdSubprocessScripting) Name() string { return "subprocess.scripting" }
-
-func (c CmdSubprocessScripting) Validate() error {
-	return nil
-}
-
-func (c CmdSubprocessScripting) Resolve() *CommandDefinition {
-	return &CommandDefinition{
-		CommandName: c.Name(),
-		Params:      exportCmd(c),
-	}
-}
-
-func subprocessScriptingFactory() Command { return CmdSubprocessScripting{} }
-
 type CmdS3Put struct {
 	AWSKey                        string   `json:"aws_key" yaml:"aws_key"`
 	AWSSecret                     string   `json:"aws_secret" yaml:"aws_secret"`

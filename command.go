@@ -15,7 +15,6 @@ func init() {
 	toRegister := []commandFactory{
 		subprocessExecFactory,
 		shellExecFactory,
-		subprocessScriptingFactory,
 		setExpansionsFactory,
 		s3PutFactory,
 		s3GetFactory,
