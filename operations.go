@@ -269,32 +269,16 @@ func (c CmdResultsXunit) Resolve() *CommandDefinition {
 func xunitResultsFactory() Command { return CmdResultsXunit{} }
 
 type CmdResultsGoTest struct {
-	JSONFormat   bool     `json:"-" yaml:"-"`
-	LegacyFormat bool     `json:"-" yaml:"-"`
-	Files        []string `json:"files" yaml:"files"`
+	Files []string `json:"files" yaml:"files"`
 }
 
 func (c CmdResultsGoTest) Name() string {
-	if c.LegacyFormat {
-		return "gotest.parse_files"
-	}
-	return "gotest.parse_json"
+	return "gotest.parse_files"
 }
 func (c CmdResultsGoTest) Validate() error {
-	if c.JSONFormat == c.LegacyFormat {
-		return errors.New("invalid format for gotest operation")
-	}
-
 	return nil
 }
 func (c CmdResultsGoTest) Resolve() *CommandDefinition {
-	if c.JSONFormat {
-		return &CommandDefinition{
-			CommandName: c.Name(),
-			Params:      exportCmd(c),
-		}
-	}
-
 	return &CommandDefinition{
 		CommandName: "gotest.parse_files",
 		Params:      exportCmd(c),
