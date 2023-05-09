@@ -41,7 +41,48 @@ func TestVariantBuilders(t *testing.T) {
 			assert(t, v.Activate == nil, "default value")
 			activateVal := false
 			v2 := v.SetActivate(&activateVal)
+			require(t, v.Activate != nil, "expected value")
 			assert(t, *v.Activate == activateVal, "expected value")
+			assert(t, v2 == v, "chainable")
+		},
+		"DisableSetter": func(t *testing.T, v *Variant) {
+			assert(t, v.Disable == nil, "default value")
+			disableVal := true
+			v2 := v.SetDisable(&disableVal)
+			require(t, v.Disable != nil, "expected value")
+			assert(t, *v.Disable == disableVal, "expected value")
+			assert(t, v2 == v, "chainable")
+		},
+		"PatchableSetter": func(t *testing.T, v *Variant) {
+			assert(t, v.Patchable == nil, "default value")
+			patchableVal := true
+			v2 := v.SetPatchable(&patchableVal)
+			require(t, v.Patchable != nil, "expected value")
+			assert(t, *v.Patchable == patchableVal, "expected value")
+			assert(t, v2 == v, "chainable")
+		},
+		"PatchOnlySetter": func(t *testing.T, v *Variant) {
+			assert(t, v.PatchOnly == nil, "default value")
+			patchOnlyVal := true
+			v2 := v.SetPatchOnly(&patchOnlyVal)
+			require(t, v.PatchOnly != nil, "expected value")
+			assert(t, *v.PatchOnly == patchOnlyVal, "expected value")
+			assert(t, v2 == v, "chainable")
+		},
+		"AllowForGitTagSetter": func(t *testing.T, v *Variant) {
+			assert(t, v.AllowForGitTag == nil, "default value")
+			allowForGitTagVal := true
+			v2 := v.SetAllowForGitTag(&allowForGitTagVal)
+			require(t, v.AllowForGitTag != nil, "expected value")
+			assert(t, *v.AllowForGitTag == allowForGitTagVal, "expected value")
+			assert(t, v2 == v, "chainable")
+		},
+		"GitTagOnlySetter": func(t *testing.T, v *Variant) {
+			assert(t, v.GitTagOnly == nil, "default value")
+			gitTagOnlyVal := true
+			v2 := v.SetGitTagOnly(&gitTagOnlyVal)
+			require(t, v.GitTagOnly != nil, "expected value")
+			assert(t, *v.GitTagOnly == gitTagOnlyVal, "expected value")
 			assert(t, v2 == v, "chainable")
 		},
 		"RunOnSetter": func(t *testing.T, v *Variant) {
