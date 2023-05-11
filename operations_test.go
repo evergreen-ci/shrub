@@ -20,8 +20,7 @@ func TestWellformedOperations(t *testing.T) {
 		"attach.artifacts":          CmdAttachArtifacts{},
 		"attach.results":            CmdResultsJSON{},
 		"attach.xunit_results":      CmdResultsXunit{},
-		"gotest.parse_files":        CmdResultsGoTest{LegacyFormat: true},
-		"gotest.parse_json":         CmdResultsGoTest{JSONFormat: true},
+		"gotest.parse_files":        CmdResultsGoTest{},
 		"archive.zip_pack":          CmdArchiveCreate{Format: ZIP},
 		"archive.targz_pack":        CmdArchiveCreate{Format: TARBALL},
 		"archive.zip_extract":       CmdArchiveExtract{Format: ZIP},
@@ -68,8 +67,6 @@ func TestPoorlyFormedOperations(t *testing.T) {
 		"s3put.nofile":        CmdS3Put{AWSKey: "foo", AWSSecret: "bar"},
 		"s3put.nosecret":      CmdS3Put{AWSKey: "foo", LocalFile: "baz"},
 		"s3put.nokey":         CmdS3Put{AWSSecret: "bar", LocalFile: "baz"},
-		"gotest.empty":        CmdResultsGoTest{},
-		"gotest.both":         CmdResultsGoTest{JSONFormat: true, LegacyFormat: true},
 		"archive.create_auto": CmdArchiveCreate{Format: ArchiveFormat("auto")},
 		"archive.invalid":     CmdArchiveExtract{Format: ArchiveFormat("bleh")},
 	}
