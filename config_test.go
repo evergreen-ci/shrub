@@ -3,7 +3,6 @@ package shrub
 import (
 	"fmt"
 	"testing"
-	"time"
 )
 
 func TestConfigTopLevelModifiers(t *testing.T) {
@@ -173,52 +172,6 @@ func TestConfigTopLevelModifiers(t *testing.T) {
 				assert(t, cases[0] == task)
 				assert(t, different != task)
 			}
-		},
-	}
-
-	for name, test := range cases {
-		conf := &Configuration{}
-		t.Run(name, func(t *testing.T) {
-			test(t, conf)
-		})
-	}
-}
-
-func TestHighLevelProjectSettings(t *testing.T) {
-	cases := map[string]func(*testing.T, *Configuration){
-		"SetExecTimeOut": func(t *testing.T, conf *Configuration) {
-			assert(t, conf.ExecTimeoutSecs == 0, "has default zero value")
-
-			conf.ExecTimeout(time.Millisecond)
-			assert(t, conf.ExecTimeoutSecs == 0, "round to zero")
-
-			conf.ExecTimeout(time.Minute)
-			assert(t, conf.ExecTimeoutSecs == 60, "reasonable values are accepted")
-		},
-		"SetBatchTime": func(t *testing.T, conf *Configuration) {
-			assert(t, conf.BatchTimeSecs == 0, "has default zero value")
-
-			conf.BatchTime(time.Millisecond)
-			assert(t, conf.BatchTimeSecs == 0, "round to zero")
-
-			conf.BatchTime(time.Minute)
-			assert(t, conf.BatchTimeSecs == 60, "reasonable values are accepted")
-		},
-		"SetValidCommandType": func(t *testing.T, conf *Configuration) {
-			assert(t, conf.CommandType == "")
-
-			for _, cmdType := range []string{"system", "setup", "task"} {
-				conf.SetCommandType(cmdType)
-
-				assert(t, conf.CommandType == cmdType)
-			}
-		},
-		"SetInvalidCommandType": func(t *testing.T, _ *Configuration) {
-			conf, err := BuildConfiguration(func(conf *Configuration) {
-				conf.SetCommandType("foo")
-			})
-			assert(t, err != nil)
-			assert(t, conf == nil)
 		},
 	}
 

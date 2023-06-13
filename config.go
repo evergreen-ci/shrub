@@ -14,11 +14,6 @@
 // function which will convert a panic into a an error.
 package shrub
 
-import (
-	"fmt"
-	"time"
-)
-
 // Configuration is the top-level representation of the components of
 // an evergreen project configuration.
 type Configuration struct {
@@ -26,16 +21,6 @@ type Configuration struct {
 	Tasks     []*Task                     `json:"tasks,omitempty" yaml:"tasks,omitempty"`
 	Groups    []*TaskGroup                `json:"task_groups,omitempty" yaml:"task_groups,omitempty"`
 	Variants  []*Variant                  `json:"buildvariants,omitempty" yaml:"buildvariants,omitempty"`
-	Pre       *CommandSequence            `json:"pre,omitempty" yaml:"pre,omitempty"`
-	Post      *CommandSequence            `json:"post,omitempty" yaml:"post,omitempty"`
-	Timeout   *CommandSequence            `json:"timeout,omitempty" yaml:"timeout,omitempty"`
-
-	// Top Level Options
-	ExecTimeoutSecs int      `json:"exec_timeout_secs,omitempty" yaml:"exec_timeout_secs,omitempty"`
-	BatchTimeSecs   int      `json:"batchtime,omitempty" yaml:"batchtime,omitempty"`
-	Stepback        bool     `json:"stepback,omitempty" yaml:"stepback,omitempty"`
-	CommandType     string   `json:"command_type,omitempty" yaml:"command_type,omitempty"`
-	IgnoreFiles     []string `json:"ignore,omitempty" yaml:"ignore,omitempty"`
 }
 
 // Task returns a task of the specified name. If the task already
@@ -101,31 +86,4 @@ func (c *Configuration) Variant(id string) *Variant {
 	v := new(Variant)
 	c.Variants = append(c.Variants, v)
 	return v.Name(id)
-}
-
-////////////////////////////////////////////////////////////////////////
-//
-// Highlevel project-wide configuration settings.
-
-// ExectTimeout allows you to set the exec timeout for all commands to
-// a specified value. This value has second-level granularity.
-func (c *Configuration) ExecTimeout(dur time.Duration) *Configuration {
-	c.ExecTimeoutSecs = int(dur.Seconds())
-	return c
-}
-
-func (c *Configuration) BatchTime(dur time.Duration) *Configuration {
-	c.BatchTimeSecs = int(dur.Seconds())
-	return c
-}
-
-func (c *Configuration) SetCommandType(t string) *Configuration {
-	switch t {
-	case "system", "setup", "task":
-		c.CommandType = t
-	default:
-		panic(fmt.Sprintf("%s, is not a valid command type", t))
-	}
-
-	return c
 }
