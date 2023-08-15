@@ -441,6 +441,7 @@ type CmdHostCreate struct {
 	Background               bool                             `json:"background,omitempty" yaml:"background,omitempty"`
 	ContainerWaitTimeoutSecs int                              `json:"container_wait_timeout_secs,omitempty" yaml:"container_wait_timeout_secs,omitempty"`
 	PollFrequency            int                              `json:"poll_frequency_secs,omitempty" yaml:"poll_frequency_secs,omitempty"`
+	StdinFile                string                           `json:"stdin_file_name,omitempty" yaml:"stdin_file_name,omitempty"`
 	StdoutFile               string                           `json:"stdout_file_name,omitempty" yaml:"stdout_file_name,omitempty"`
 	StderrFile               string                           `json:"stderr_file_name,omitempty" yaml:"stderr_file_name,omitempty"`
 	EnvironmentVars          map[string]string                `json:"environment_vars,omitempty" yaml:"environment_vars,omitempty"`
