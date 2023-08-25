@@ -1,10 +1,9 @@
 // Package shrub provides a simple, low-overhead interface for
 // generating Evergreen project configurations.
 //
-// For most use cases, you can start with a Configuration created via
-// BuildConfiguration and add data such as new tasks, task groups, build
-// variants, and functions to that Configuration using the provided setters. For
-// example:
+// For most use cases, you can start with a Configuration struct and add data
+// such as new tasks, task groups, build variants, and functions to that
+// Configuration using the provided setters. For example:
 //
 //	conf := &Configuration{}
 //
