@@ -138,6 +138,8 @@ func (c *CommandDefinition) ExtendVars(vars map[string]string) *CommandDefinitio
 	return c
 }
 
+// CommandSequence represents a list of commands, such as for a func,
+// setup_group, setup_task, etc.
 type CommandSequence []*CommandDefinition
 
 func (s *CommandSequence) Len() int { return len(*s) }

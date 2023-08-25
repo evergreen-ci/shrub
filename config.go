@@ -1,17 +1,50 @@
 // Package shrub provides a simple, low-overhead interface for
 // generating Evergreen project configurations.
 //
-// // In general, you can either implement  your config using either
-// direct declarative constructors for all objects or the mentions
-// which provide a more user-friendly interface. When you have a
-// complete configuration, simply use json.Marshal() to serialize the
-// config and write the contents to a file or a web request.
+// For most use cases, you can start with a Configuration created via
+// BuildConfiguration and add data such as new tasks, task groups, build
+// variants, and functions to that Configuration using the provided setters. For
+// example:
+//
+//	conf := &Configuration{}
+//	// The following function definitions is equivalent to the YAML
+//	// configuration:
+//	// functions:
+//	//   - name: my-new-func
+//	//     commands:
+//	//       - name: git.get_project
+//	//         params:
+//	//           directory: my-working-directory
+//	//       - name: shell.exec
+//	//         params:
+//	//           script: echo hello world!
+//	newFunc := conf.Function("my-new-func")
+//	newFunc.Command().Command("git.get_project").Param("directory", "my-working-directory")
+//	newFunc.Command().Command("shell.exec").Param("script", "echo hello world!")
+//
+//	// The following task definition is equivalent to the YAML configuration:
+//	// tasks:
+//	//   - name: my-new-task
+//	//     commands:
+//	//        - func: my-new-func
+//	newTask := conf.Task("my-new-task")
+//	newTask.Function("my-new-func")
+//
+//	// The following build variant definitions is equivalent to the YAML
+//	// configuration:
+//	// buildvariants:
+//	//   - name: my-new-build-variant
+//	//     run_on:
+//	//       - some-distro
+//	//     tasks:
+//	//       - name: my-new-task
+//	newBV := conf.Variant("my-new-build-variant")
+//	newBV.RunOn("some-distro")
+//	newBV.AddTasks("my-new-task")
 //
 // Be aware that some command methods will panic if you attempt to
-// construct an invalid command. This allows nearly all methods in
-// this interface to be chain-able (e.g. fluent) without
-// requiring excessive error handling. You can use the SafeBuilder
-// function which will convert a panic into a an error.
+// construct an invalid command. You can wrap your configuration logic with
+// BuildConfiguration to convert any panic into an error.
 package shrub
 
 // Configuration is the top-level representation of the components of
