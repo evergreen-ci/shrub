@@ -1,7 +1,6 @@
 package shrub
 
-// Variant represents a single new build variant to generate. Alternatively, it
-// can be used to update the task list for an existing variant.
+// Variant represents a single build variant to generate.
 type Variant struct {
 	BuildName        string                  `json:"name,omitempty" yaml:"name,omitempty"`
 	BuildDisplayName string                  `json:"display_name,omitempty" yaml:"display_name,omitempty"`
