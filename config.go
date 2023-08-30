@@ -1,17 +1,3 @@
-// Package shrub provides a simple, low-overhead interface for
-// generating Evergreen project configurations.
-//
-// // In general, you can either implement  your config using either
-// direct declarative constructors for all objects or the mentions
-// which provide a more user-friendly interface. When you have a
-// complete configuration, simply use json.Marshal() to serialize the
-// config and write the contents to a file or a web request.
-//
-// Be aware that some command methods will panic if you attempt to
-// construct an invalid command. This allows nearly all methods in
-// this interface to be chain-able (e.g. fluent) without
-// requiring excessive error handling. You can use the SafeBuilder
-// function which will convert a panic into a an error.
 package shrub
 
 // Configuration is the top-level representation of the components of

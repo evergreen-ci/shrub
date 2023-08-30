@@ -1,5 +1,6 @@
 package shrub
 
+// Task represents a single new task to generate.
 type Task struct {
 	Name               string           `json:"name" yaml:"name"`
 	Dependencies       []TaskDependency `json:"depends_on,omitempty" yaml:"dependencies,omitempty"`
@@ -123,6 +124,7 @@ func (t *Task) MustHaveTestResults(val bool) *Task {
 	return t
 }
 
+// TaskGroup represents a new task group definition.
 type TaskGroup struct {
 	GroupName             string          `json:"name" yaml:"name"`
 	MaxHosts              int             `json:"max_hosts,omitempty" yaml:"max_hosts,omitempty"`
