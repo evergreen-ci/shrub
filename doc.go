@@ -5,6 +5,7 @@
 // such as new tasks, task groups, build variants, and functions to that
 // Configuration using the provided setters. For example:
 //
+//	// Create an empty configuration that will be populated later.
 //	conf := &Configuration{}
 //
 //	// The following function definitions is equivalent to the YAML
