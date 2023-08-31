@@ -85,6 +85,14 @@ func TestVariantBuilders(t *testing.T) {
 			assert(t, *v.GitTagOnly == gitTagOnlyVal, "expected value")
 			assert(t, v2 == v, "chainable")
 		},
+		"AllowedRequestersSetter": func(t *testing.T, v *Variant) {
+			assert(t, v.AllowedRequesters == nil, "default value")
+			requesters := []string{"patch"}
+			v2 := v.SetAllowedRequesters(requesters)
+			require(t, len(v.AllowedRequesters) == 1, "expected value")
+			assert(t, v.AllowedRequesters[0] == requesters[0], "expected value")
+			assert(t, v2 == v, "chainable")
+		},
 		"RunOnSetter": func(t *testing.T, v *Variant) {
 			assert(t, len(v.DistroRunOn) == 0, "default value")
 			v2 := v.RunOn("foo")
@@ -220,6 +228,49 @@ func TestTaskSpecBuilders(t *testing.T) {
 			ts2 := ts.SetActivate(&trueVal)
 			require(t, ts.Activate != nil)
 			assert(t, *ts.Activate, "expected value")
+			assert(t, ts2 == ts, "chainable")
+		},
+		"DisableSetter": func(t *testing.T, ts *TaskSpec) {
+			assert(t, ts.Disable == nil, "default value")
+			ts2 := ts.SetDisable(&trueVal)
+			require(t, ts.Disable != nil)
+			assert(t, *ts.Disable, "expected value")
+			assert(t, ts2 == ts, "chainable")
+		},
+		"PatchableSetter": func(t *testing.T, ts *TaskSpec) {
+			assert(t, ts.Patchable == nil, "default value")
+			ts2 := ts.SetPatchable(&trueVal)
+			require(t, ts.Patchable != nil)
+			assert(t, *ts.Patchable, "expected value")
+			assert(t, ts2 == ts, "chainable")
+		},
+		"PatchOnlySetter": func(t *testing.T, ts *TaskSpec) {
+			assert(t, ts.PatchOnly == nil, "default value")
+			ts2 := ts.SetPatchOnly(&trueVal)
+			require(t, ts.PatchOnly != nil)
+			assert(t, *ts.PatchOnly, "expected value")
+			assert(t, ts2 == ts, "chainable")
+		},
+		"AllowForGitTagSetter": func(t *testing.T, ts *TaskSpec) {
+			assert(t, ts.AllowForGitTag == nil, "default value")
+			ts2 := ts.SetAllowForGitTag(&trueVal)
+			require(t, ts.AllowForGitTag != nil)
+			assert(t, *ts.AllowForGitTag, "expected value")
+			assert(t, ts2 == ts, "chainable")
+		},
+		"GitTagOnlySetter": func(t *testing.T, ts *TaskSpec) {
+			assert(t, ts.GitTagOnly == nil, "default value")
+			ts2 := ts.SetGitTagOnly(&trueVal)
+			require(t, ts.GitTagOnly != nil)
+			assert(t, *ts.GitTagOnly, "expected value")
+			assert(t, ts2 == ts, "chainable")
+		},
+		"AllowedRequestersSetter": func(t *testing.T, ts *TaskSpec) {
+			assert(t, ts.AllowedRequesters == nil, "default value")
+			requesters := []string{"patch"}
+			ts2 := ts.SetAllowedRequesters(requesters)
+			require(t, len(ts.AllowedRequesters) == 1)
+			assert(t, ts.AllowedRequesters[0] == requesters[0], "expected value")
 			assert(t, ts2 == ts, "chainable")
 		},
 	}
