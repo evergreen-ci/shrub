@@ -75,8 +75,8 @@ func (ts *TaskSpec) SetGitTagOnly(gitTagOnly *bool) *TaskSpec {
 	return ts
 }
 
-func (ts *TaskSpec) SetAllowedRequesters(requesters []string) *TaskSpec {
-	ts.AllowedRequesters = requesters
+func (ts *TaskSpec) AllowedRequester(requesters ...string) *TaskSpec {
+	ts.AllowedRequesters = append(ts.AllowedRequesters, requesters...)
 	return ts
 }
 
@@ -90,10 +90,11 @@ func (v *Variant) SetPatchable(patchable *bool) *Variant      { v.Patchable = pa
 func (v *Variant) SetPatchOnly(patchOnly *bool) *Variant      { v.PatchOnly = patchOnly; return v }
 func (v *Variant) SetAllowForGitTag(allow *bool) *Variant     { v.AllowForGitTag = allow; return v }
 func (v *Variant) SetGitTagOnly(gitTagOnly *bool) *Variant    { v.GitTagOnly = gitTagOnly; return v }
-func (v *Variant) SetAllowedRequesters(requesters []string) *Variant {
-	v.AllowedRequesters = requesters
+func (v *Variant) AllowedRequester(requesters ...string) *Variant {
+	v.AllowedRequesters = append(v.AllowedRequesters, requesters...)
 	return v
 }
+
 func (v *Variant) DisplayName(id string) *Variant                  { v.BuildDisplayName = id; return v }
 func (v *Variant) RunOn(distro string) *Variant                    { v.DistroRunOn = []string{distro}; return v }
 func (v *Variant) TaskSpec(spec TaskSpec) *Variant                 { v.TaskSpecs = append(v.TaskSpecs, spec); return v }

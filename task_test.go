@@ -90,11 +90,10 @@ func TestTaskBuilder(t *testing.T) {
 			assert(t, task.IsGitTagOnly != nil && !*task.IsGitTagOnly)
 		},
 		"AllowedRequestersSetter": func(t *testing.T, task *Task) {
-			require(t, task.AllowedRequesterSet == nil, "default")
-			requesters := []string{"patch"}
-			task.AllowedRequesters(requesters)
-			require(t, len(task.AllowedRequesterSet) == 1)
-			assert(t, task.AllowedRequesterSet[0] == requesters[0])
+			require(t, task.AllowedRequesters == nil, "default")
+			task.AllowedRequester("patch")
+			require(t, len(task.AllowedRequesters) == 1)
+			assert(t, task.AllowedRequesters[0] == "patch")
 		},
 		"StepbackSetter": func(t *testing.T, task *Task) {
 			require(t, task.CanStepback == nil, "default")

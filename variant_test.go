@@ -87,10 +87,9 @@ func TestVariantBuilders(t *testing.T) {
 		},
 		"AllowedRequestersSetter": func(t *testing.T, v *Variant) {
 			assert(t, v.AllowedRequesters == nil, "default value")
-			requesters := []string{"patch"}
-			v2 := v.SetAllowedRequesters(requesters)
+			v2 := v.AllowedRequester("patch")
 			require(t, len(v.AllowedRequesters) == 1, "expected value")
-			assert(t, v.AllowedRequesters[0] == requesters[0], "expected value")
+			assert(t, v.AllowedRequesters[0] == "patch", "expected value")
 			assert(t, v2 == v, "chainable")
 		},
 		"RunOnSetter": func(t *testing.T, v *Variant) {
@@ -267,10 +266,9 @@ func TestTaskSpecBuilders(t *testing.T) {
 		},
 		"AllowedRequestersSetter": func(t *testing.T, ts *TaskSpec) {
 			assert(t, ts.AllowedRequesters == nil, "default value")
-			requesters := []string{"patch"}
-			ts2 := ts.SetAllowedRequesters(requesters)
+			ts2 := ts.AllowedRequester("patch")
 			require(t, len(ts.AllowedRequesters) == 1)
-			assert(t, ts.AllowedRequesters[0] == requesters[0], "expected value")
+			assert(t, ts.AllowedRequesters[0] == "patch", "expected value")
 			assert(t, ts2 == ts, "chainable")
 		},
 	}
