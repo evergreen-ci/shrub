@@ -12,12 +12,13 @@ type Variant struct {
 	Expansions       map[string]interface{}  `json:"expansions,omitempty" yaml:"expansions,omitempty"`
 	DisplayTaskSpecs []DisplayTaskDefinition `json:"display_tasks,omitempty" yaml:"display_tasks,omitempty"`
 	// If Activate is set to false, then we don't initially activate the build variant.
-	Activate       *bool `json:"activate,omitempty" yaml:"activate,omitempty"`
-	Disable        *bool `json:"disable,omitempty" yaml:"disable,omitempty"`
-	Patchable      *bool `json:"patchable,omitempty" yaml:"patchable,omitempty"`
-	PatchOnly      *bool `json:"patch_only,omitempty" yaml:"patch_only,omitempty"`
-	AllowForGitTag *bool `json:"allow_for_git_tag,omitempty" yaml:"allow_for_git_tag,omitempty"`
-	GitTagOnly     *bool `json:"git_tag_only,omitempty" yaml:"git_tag_only,omitempty"`
+	Activate          *bool    `json:"activate,omitempty" yaml:"activate,omitempty"`
+	Disable           *bool    `json:"disable,omitempty" yaml:"disable,omitempty"`
+	Patchable         *bool    `json:"patchable,omitempty" yaml:"patchable,omitempty"`
+	PatchOnly         *bool    `json:"patch_only,omitempty" yaml:"patch_only,omitempty"`
+	AllowForGitTag    *bool    `json:"allow_for_git_tag,omitempty" yaml:"allow_for_git_tag,omitempty"`
+	GitTagOnly        *bool    `json:"git_tag_only,omitempty" yaml:"git_tag_only,omitempty"`
+	AllowedRequesters []string `json:"allowed_requesters,omitempty" yaml:"allowed_requesters,omitempty"`
 }
 
 type DisplayTaskDefinition struct {
@@ -26,10 +27,16 @@ type DisplayTaskDefinition struct {
 }
 
 type TaskSpec struct {
-	Name     string   `json:"name" yaml:"name"`
-	Stepback bool     `json:"stepback,omitempty" yaml:"stepback,omitempty"`
-	Distro   []string `json:"distros,omitempty" yaml:"distro,omitempty"`
-	Activate *bool    `json:"activate,omitempty" yaml:"activate,omitempty"`
+	Name              string   `json:"name" yaml:"name"`
+	Stepback          bool     `json:"stepback,omitempty" yaml:"stepback,omitempty"`
+	Distro            []string `json:"distros,omitempty" yaml:"distro,omitempty"`
+	Activate          *bool    `json:"activate,omitempty" yaml:"activate,omitempty"`
+	Disable           *bool    `json:"disable,omitempty" yaml:"disable,omitempty"`
+	Patchable         *bool    `json:"patchable,omitempty" yaml:"patchable,omitempty"`
+	PatchOnly         *bool    `json:"patch_only,omitempty" yaml:"patch_only,omitempty"`
+	AllowForGitTag    *bool    `json:"allow_for_git_tag,omitempty" yaml:"allow_for_git_tag,omitempty"`
+	GitTagOnly        *bool    `json:"git_tag_only,omitempty" yaml:"git_tag_only,omitempty"`
+	AllowedRequesters []string `json:"allowed_requesters,omitempty" yaml:"allowed_requesters,omitempty"`
 }
 
 func (ts *TaskSpec) SetName(name string) *TaskSpec { ts.Name = name; return ts }
@@ -43,16 +50,51 @@ func (ts *TaskSpec) SetActivate(shouldActivate *bool) *TaskSpec {
 	return ts
 }
 
-func (v *Variant) Name(id string) *Variant                         { v.BuildName = id; return v }
-func (v *Variant) BatchTime(batchTimeSecs int) *Variant            { v.BatchTimeSecs = batchTimeSecs; return v }
-func (v *Variant) SetCronBatchTime(batchTime string) *Variant      { v.CronBatchTime = batchTime; return v }
-func (v *Variant) SetStepback(stepback *bool) *Variant             { v.Stepback = stepback; return v }
-func (v *Variant) SetActivate(activate *bool) *Variant             { v.Activate = activate; return v }
-func (v *Variant) SetDisable(disable *bool) *Variant               { v.Disable = disable; return v }
-func (v *Variant) SetPatchable(patchable *bool) *Variant           { v.Patchable = patchable; return v }
-func (v *Variant) SetPatchOnly(patchOnly *bool) *Variant           { v.PatchOnly = patchOnly; return v }
-func (v *Variant) SetAllowForGitTag(allow *bool) *Variant          { v.AllowForGitTag = allow; return v }
-func (v *Variant) SetGitTagOnly(gitTagOnly *bool) *Variant         { v.GitTagOnly = gitTagOnly; return v }
+func (ts *TaskSpec) SetDisable(disable *bool) *TaskSpec {
+	ts.Disable = disable
+	return ts
+}
+
+func (ts *TaskSpec) SetPatchable(patchable *bool) *TaskSpec {
+	ts.Patchable = patchable
+	return ts
+}
+
+func (ts *TaskSpec) SetPatchOnly(patchOnly *bool) *TaskSpec {
+	ts.PatchOnly = patchOnly
+	return ts
+}
+
+func (ts *TaskSpec) SetAllowForGitTag(allowForGitTag *bool) *TaskSpec {
+	ts.AllowForGitTag = allowForGitTag
+	return ts
+}
+
+func (ts *TaskSpec) SetGitTagOnly(gitTagOnly *bool) *TaskSpec {
+	ts.GitTagOnly = gitTagOnly
+	return ts
+}
+
+func (ts *TaskSpec) AllowedRequester(requesters ...string) *TaskSpec {
+	ts.AllowedRequesters = append(ts.AllowedRequesters, requesters...)
+	return ts
+}
+
+func (v *Variant) Name(id string) *Variant                    { v.BuildName = id; return v }
+func (v *Variant) BatchTime(batchTimeSecs int) *Variant       { v.BatchTimeSecs = batchTimeSecs; return v }
+func (v *Variant) SetCronBatchTime(batchTime string) *Variant { v.CronBatchTime = batchTime; return v }
+func (v *Variant) SetStepback(stepback *bool) *Variant        { v.Stepback = stepback; return v }
+func (v *Variant) SetActivate(activate *bool) *Variant        { v.Activate = activate; return v }
+func (v *Variant) SetDisable(disable *bool) *Variant          { v.Disable = disable; return v }
+func (v *Variant) SetPatchable(patchable *bool) *Variant      { v.Patchable = patchable; return v }
+func (v *Variant) SetPatchOnly(patchOnly *bool) *Variant      { v.PatchOnly = patchOnly; return v }
+func (v *Variant) SetAllowForGitTag(allow *bool) *Variant     { v.AllowForGitTag = allow; return v }
+func (v *Variant) SetGitTagOnly(gitTagOnly *bool) *Variant    { v.GitTagOnly = gitTagOnly; return v }
+func (v *Variant) AllowedRequester(requesters ...string) *Variant {
+	v.AllowedRequesters = append(v.AllowedRequesters, requesters...)
+	return v
+}
+
 func (v *Variant) DisplayName(id string) *Variant                  { v.BuildDisplayName = id; return v }
 func (v *Variant) RunOn(distro string) *Variant                    { v.DistroRunOn = []string{distro}; return v }
 func (v *Variant) TaskSpec(spec TaskSpec) *Variant                 { v.TaskSpecs = append(v.TaskSpecs, spec); return v }
