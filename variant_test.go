@@ -106,7 +106,7 @@ func TestVariantBuilders(t *testing.T) {
 			assert(t, v2 == v, "chainable")
 			assert(t, len(v.Modules) == 1, "state impacted")
 		},
-		"ModuleMutipleTimes": func(t *testing.T, v *Variant) {
+		"ModuleMultipleTimes": func(t *testing.T, v *Variant) {
 			assert(t, len(v.Modules) == 0, "default value")
 			v2 := v.Module("one").Module("two")
 			assert(t, v2 == v, "chainable")
