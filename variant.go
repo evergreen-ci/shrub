@@ -11,6 +11,7 @@ type Variant struct {
 	DistroRunOn      []string                `json:"run_on,omitempty" yaml:"run_on,omitempty"`
 	Expansions       map[string]interface{}  `json:"expansions,omitempty" yaml:"expansions,omitempty"`
 	DisplayTaskSpecs []DisplayTaskDefinition `json:"display_tasks,omitempty" yaml:"display_tasks,omitempty"`
+	Modules          []string                `json:"modules,omitempty" yaml:"modules,omitempty"`
 	// If Activate is set to false, then we don't initially activate the build variant.
 	Activate          *bool    `json:"activate,omitempty" yaml:"activate,omitempty"`
 	Disable           *bool    `json:"disable,omitempty" yaml:"disable,omitempty"`
@@ -98,6 +99,7 @@ func (v *Variant) AllowedRequester(requesters ...string) *Variant {
 func (v *Variant) DisplayName(id string) *Variant                  { v.BuildDisplayName = id; return v }
 func (v *Variant) RunOn(distro string) *Variant                    { v.DistroRunOn = []string{distro}; return v }
 func (v *Variant) TaskSpec(spec TaskSpec) *Variant                 { v.TaskSpecs = append(v.TaskSpecs, spec); return v }
+func (v *Variant) Module(module string) *Variant                   { v.Modules = append(v.Modules, module); return v }
 func (v *Variant) SetExpansions(m map[string]interface{}) *Variant { v.Expansions = m; return v }
 
 func (v *Variant) Expansion(k string, val interface{}) *Variant {

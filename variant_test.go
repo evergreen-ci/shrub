@@ -107,6 +107,19 @@ func TestVariantBuilders(t *testing.T) {
 			assert(t, v.DistroRunOn[0] == "baz", "expected value")
 			assert(t, v2 == v, "chainable")
 		},
+		"ModuleSetter": func(t *testing.T, v *Variant) {
+			assert(t, len(v.Modules) == 0, "default value")
+			v2 := v.Module("one")
+			assert(t, v2 == v, "chainable")
+			assert(t, len(v.Modules) == 1, "state impacted")
+		},
+		"ModuleMultipleTimes": func(t *testing.T, v *Variant) {
+			assert(t, len(v.Modules) == 0, "default value")
+			v2 := v.Module("one").Module("two")
+			assert(t, v2 == v, "chainable")
+			require(t, len(v.Modules) == 2, "state impacted")
+			assert(t, v.Modules[1] == "two", "expected value")
+		},
 		"TaskSpecSetterFirst": func(t *testing.T, v *Variant) {
 			v2 := v.TaskSpec(TaskSpec{Name: "foo"})
 			require(t, len(v.TaskSpecs) == 1, "set")
