@@ -189,6 +189,15 @@ func TestTaskBuilder(t *testing.T) {
 			task.Tag("two", "43")
 			assert(t, len(task.Tags) == 4, "multi add without deduplicating")
 		},
+		"RunOnAdder": func(t *testing.T, task *Task) {
+			require(t, len(task.DistroRunOn) == 0, "default")
+			task.RunOn()
+			assert(t, len(task.DistroRunOn) == 0, "noop")
+			task.RunOn("distro0")
+			assert(t, len(task.DistroRunOn) == 1, "first")
+			task.RunOn("distro1")
+			assert(t, len(task.DistroRunOn) == 1, "second")
+		},
 	}
 
 	for name, test := range cases {
@@ -217,6 +226,26 @@ func TestTaskDependency(t *testing.T) {
 		assert(t, td.Status == "")
 		td.SetStatus("failed")
 		assert(t, td.Status == "failed")
+	})
+	t.Run("PatchOptionalSetter", func(t *testing.T) {
+		td := &TaskDependency{}
+		assert(t, td.PatchOptional == nil, "default")
+
+		td.SetPatchOptional(true)
+		assert(t, td.PatchOptional != nil && *td.PatchOptional)
+
+		td.SetPatchOptional(false)
+		assert(t, td.PatchOptional != nil && !*td.PatchOptional)
+	})
+	t.Run("OmitGeneratedTasksSetter", func(t *testing.T) {
+		td := &TaskDependency{}
+		assert(t, td.OmitGeneratedTasks == nil, "default")
+
+		td.SetOmitGeneratedTasks(true)
+		assert(t, td.OmitGeneratedTasks != nil && *td.OmitGeneratedTasks)
+
+		td.SetOmitGeneratedTasks(false)
+		assert(t, td.OmitGeneratedTasks != nil && !*td.OmitGeneratedTasks)
 	})
 }
 
@@ -279,7 +308,7 @@ func TestTaskGroup(t *testing.T) {
 	})
 	t.Run("SetupGroupTimeoutSecsSetter", func(t *testing.T) {
 		g := &TaskGroup{}
-		require(t, !g.SetupGroupCanFailTask)
+		require(t, g.SetupGroupTimeoutSecs == 0, "default value")
 		g.SetSetupGroupTimeoutSecs(100)
 		assert(t, g.SetupGroupTimeoutSecs == 100, "set setup group timeout secs")
 		g.SetSetupGroupTimeoutSecs(0)
@@ -299,6 +328,22 @@ func TestTaskGroup(t *testing.T) {
 		defer expect(t, "adding invalid command should panic")
 		g.SetupTaskCommand(CmdS3Put{})
 	})
+	t.Run("SetupTaskCanFailTaskSetter", func(t *testing.T) {
+		g := &TaskGroup{}
+		require(t, !g.SetupTaskCanFailTask)
+		g.SetSetupTaskCanFailTask(true)
+		assert(t, g.SetupTaskCanFailTask, "setup task can fail tasks")
+		g.SetSetupTaskCanFailTask(false)
+		assert(t, !g.SetupTaskCanFailTask, "setup task cannot fail tasks")
+	})
+	t.Run("SetupTaskTimeoutSecsSetter", func(t *testing.T) {
+		g := &TaskGroup{}
+		require(t, g.SetupTaskTimeoutSecs == 0, "default value")
+		g.SetSetupTaskTimeoutSecs(100)
+		assert(t, g.SetupTaskTimeoutSecs == 100, "set setup task timeout secs")
+		g.SetSetupTaskTimeoutSecs(0)
+		assert(t, g.SetupTaskTimeoutSecs == 0, "unset setup task timeout secs")
+	})
 	t.Run("TeardownTaskAdder", func(t *testing.T) {
 		g := &TaskGroup{}
 		assert(t, len(g.TeardownTask) == 0, "default value")
@@ -312,6 +357,22 @@ func TestTaskGroup(t *testing.T) {
 		assert(t, len(g.TeardownTask) == 4, "multi add")
 		defer expect(t, "adding invalid command should panic")
 		g.TeardownTaskCommand(CmdS3Put{})
+	})
+	t.Run("TeardownTaskCanFailTaskSetter", func(t *testing.T) {
+		g := &TaskGroup{}
+		require(t, !g.TeardownTaskCanFailTask)
+		g.SetTeardownTaskCanFailTask(true)
+		assert(t, g.TeardownTaskCanFailTask, "teardown task can fail tasks")
+		g.SetTeardownTaskCanFailTask(false)
+		assert(t, !g.TeardownTaskCanFailTask, "teardown task cannot fail tasks")
+	})
+	t.Run("TeardownTaskTimeoutSecsSetter", func(t *testing.T) {
+		g := &TaskGroup{}
+		require(t, g.TeardownTaskTimeoutSecs == 0, "default value")
+		g.SetTeardownTaskTimeoutSecs(100)
+		assert(t, g.TeardownTaskTimeoutSecs == 100, "set teardown task timeout secs")
+		g.SetTeardownTaskTimeoutSecs(0)
+		assert(t, g.TeardownTaskTimeoutSecs == 0, "unset teardown task timeout secs")
 	})
 	t.Run("TeardownGroupAdder", func(t *testing.T) {
 		g := &TaskGroup{}
@@ -327,6 +388,14 @@ func TestTaskGroup(t *testing.T) {
 		defer expect(t, "adding invalid command should panic")
 		g.TeardownGroupCommand(CmdS3Put{})
 	})
+	t.Run("TeardownGroupTimeoutSecsSetter", func(t *testing.T) {
+		g := &TaskGroup{}
+		require(t, g.TeardownGroupTimeoutSecs == 0, "default value")
+		g.SetTeardownGroupTimeoutSecs(100)
+		assert(t, g.TeardownGroupTimeoutSecs == 100, "set teardown task timeout secs")
+		g.SetTeardownGroupTimeoutSecs(0)
+		assert(t, g.TeardownTaskTimeoutSecs == 0, "unset teardown task timeout secs")
+	})
 	t.Run("TimeoutAdder", func(t *testing.T) {
 		g := &TaskGroup{}
 		assert(t, len(g.Timeout) == 0, "default value")
@@ -340,6 +409,14 @@ func TestTaskGroup(t *testing.T) {
 		assert(t, len(g.Timeout) == 4, "multi add")
 		defer expect(t, "adding invalid command should panic")
 		g.TimeoutCommand(CmdS3Put{})
+	})
+	t.Run("CallbackTimeoutSecsSetter", func(t *testing.T) {
+		g := &TaskGroup{}
+		require(t, g.CallbackTimeoutSecs == 0, "default value")
+		g.SetCallbackTimeoutSecs(100)
+		assert(t, g.CallbackTimeoutSecs == 100, "set callback timeout secs")
+		g.SetCallbackTimeoutSecs(0)
+		assert(t, g.CallbackTimeoutSecs == 0, "unset callback timeout secs")
 	})
 	t.Run("TagAdder", func(t *testing.T) {
 		g := &TaskGroup{}
