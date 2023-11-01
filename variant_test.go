@@ -259,6 +259,15 @@ func TestTaskSpecBuilders(t *testing.T) {
 			assert(t, ts.RunOn[0] == "distro", "expected value")
 			assert(t, ts2 == ts, "chainable")
 		},
+		"DependsOnSetter": func(t *testing.T, ts *TaskSpec) {
+			assert(t, len(ts.DependsOn) == 0, "default value")
+			dep := TaskDependency{}
+			dep.SetName("task-name").SetVariant("bv")
+			ts2 := ts.SetDependsOn(dep)
+			require(t, len(ts.DependsOn) == 1)
+			assert(t, ts.DependsOn[0] == dep, "expected value")
+			assert(t, ts2 == ts, "chainable")
+		},
 		"PrioritySetter": func(t *testing.T, ts *TaskSpec) {
 			assert(t, ts.Priority == 0, "default value")
 			ts2 := ts.SetPriority(10)
