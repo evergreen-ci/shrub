@@ -18,6 +18,14 @@ func TestVariantBuilders(t *testing.T) {
 			assert(t, v.BuildDisplayName == "foo", "expected value")
 			assert(t, v2 == v, "chainable")
 		},
+		"TagSetter": func(t *testing.T, v *Variant) {
+			assert(t, len(v.Tags) == 0, "default value")
+			v2 := v.SetTags("tag0", "tag1")
+			require(t, len(v.Tags) == 2)
+			assert(t, v.Tags[0] == "tag0", "expected value")
+			assert(t, v.Tags[1] == "tag1", "expected value")
+			assert(t, v2 == v, "chainable")
+		},
 		"BatchTimeSetter": func(t *testing.T, v *Variant) {
 			assert(t, v.BatchTimeSecs == 0, "default value")
 			v2 := v.BatchTime(12)
@@ -35,6 +43,15 @@ func TestVariantBuilders(t *testing.T) {
 			stepbackVal := true
 			v2 := v.SetStepback(&stepbackVal)
 			assert(t, *v.Stepback == stepbackVal, "expected value")
+			assert(t, v2 == v, "chainable")
+		},
+		"DependsOnSetter": func(t *testing.T, v *Variant) {
+			assert(t, len(v.DependsOn) == 0, "default value")
+			dep := TaskDependency{}
+			dep.SetName("task-name").SetVariant("bv")
+			v2 := v.SetDependsOn(dep)
+			require(t, len(v.DependsOn) == 1)
+			assert(t, v.DependsOn[0] == dep, "expected value")
 			assert(t, v2 == v, "chainable")
 		},
 		"ActivateSetter": func(t *testing.T, v *Variant) {
@@ -235,6 +252,45 @@ func TestTaskSpecBuilders(t *testing.T) {
 			assert(t, ts.Distro[0] == "distro", "expected value")
 			assert(t, ts2 == ts, "chainable")
 		},
+		"RunOnSetter": func(t *testing.T, ts *TaskSpec) {
+			assert(t, len(ts.RunOn) == 0, "default value")
+			ts2 := ts.SetRunOn("distro")
+			require(t, len(ts.RunOn) == 1, "state impacted")
+			assert(t, ts.RunOn[0] == "distro", "expected value")
+			assert(t, ts2 == ts, "chainable")
+		},
+		"PrioritySetter": func(t *testing.T, ts *TaskSpec) {
+			assert(t, ts.Priority == 0, "default value")
+			ts2 := ts.SetPriority(10)
+			assert(t, ts.Priority == 10, "expected value")
+			assert(t, ts2 == ts, "chainable")
+			ts.SetPriority(0)
+			assert(t, ts.Priority == 0, "reset value")
+		},
+		"ExecTimeoutSecsSetter": func(t *testing.T, ts *TaskSpec) {
+			assert(t, ts.ExecTimeoutSecs == 0, "default value")
+			ts2 := ts.SetExecTimeoutSecs(10)
+			assert(t, ts.ExecTimeoutSecs == 10, "expected value")
+			assert(t, ts2 == ts, "chainable")
+			ts.SetExecTimeoutSecs(0)
+			assert(t, ts.ExecTimeoutSecs == 0, "reset value")
+		},
+		"BatchtimeSetter": func(t *testing.T, ts *TaskSpec) {
+			assert(t, ts.Batchtime == 0, "default value")
+			ts2 := ts.SetBatchtime(10)
+			assert(t, ts.Batchtime == 10, "expected value")
+			assert(t, ts2 == ts, "chainable")
+			ts.SetBatchtime(0)
+			assert(t, ts.Batchtime == 0, "reset value")
+		},
+		"CronBatchtimeSetter": func(t *testing.T, ts *TaskSpec) {
+			assert(t, ts.CronBatchtime == "", "default value")
+			ts2 := ts.SetCronBatchtime("@daily")
+			assert(t, ts.CronBatchtime == "@daily", "expected value")
+			assert(t, ts2 == ts, "chainable")
+			ts.SetCronBatchtime("")
+			assert(t, ts.CronBatchtime == "", "reset value")
+		},
 		"ActivateSetter": func(t *testing.T, ts *TaskSpec) {
 			assert(t, ts.Activate == nil, "default value")
 			ts2 := ts.SetActivate(&trueVal)
@@ -284,12 +340,49 @@ func TestTaskSpecBuilders(t *testing.T) {
 			assert(t, ts.AllowedRequesters[0] == "patch", "expected value")
 			assert(t, ts2 == ts, "chainable")
 		},
+		"TaskGroupSetter": func(t *testing.T, ts *TaskSpec) {
+			assert(t, ts.TaskGroup == nil, "default value")
+			tg := TaskGroup{}
+			tg.Name("task-group").Task("task-id")
+			ts2 := ts.SetTaskGroup(tg)
+			require(t, ts.TaskGroup != nil)
+			assert(t, ts.TaskGroup.GroupName == "task-group", "expected value")
+			require(t, len(ts.TaskGroup.Tasks) == 1)
+			assert(t, ts.TaskGroup.Tasks[0] == "task-id", "expected value")
+			assert(t, ts2 == ts, "chainable")
+		},
+		"CreateCheckRunSetter": func(t *testing.T, ts *TaskSpec) {
+			assert(t, ts.CreateCheckRun == nil, "default value")
+			cr := CheckRun{}
+			cr.SetPathToOutputs("path")
+			ts2 := ts.SetCreateCheckrun(cr)
+			require(t, ts.CreateCheckRun != nil)
+			assert(t, ts.CreateCheckRun.PathToOutputs == "path", "expected value")
+			assert(t, ts2 == ts, "chainable")
+		},
 	}
 
 	for name, test := range cases {
 		ts := &TaskSpec{}
 		t.Run(name, func(t *testing.T) {
 			test(t, ts)
+		})
+	}
+}
+
+func TestCheckRun(t *testing.T) {
+	cases := map[string]func(*testing.T, *CheckRun){
+		"PathToOutputsSetter": func(t *testing.T, cr *CheckRun) {
+			assert(t, cr.PathToOutputs == "", "default value")
+			cr2 := cr.SetPathToOutputs("path")
+			assert(t, cr.PathToOutputs == "path", "expected value")
+			assert(t, cr2 == cr, "chainable")
+		},
+	}
+	for name, test := range cases {
+		cr := &CheckRun{}
+		t.Run(name, func(t *testing.T) {
+			test(t, cr)
 		})
 	}
 }
