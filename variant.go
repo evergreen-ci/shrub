@@ -33,21 +33,22 @@ type TaskSpec struct {
 	Name     string `json:"name" yaml:"name"`
 	Stepback bool   `json:"stepback,omitempty" yaml:"stepback,omitempty"`
 	// Distro is deprecated in favor of RunOn.
-	Distro            []string `json:"distros,omitempty" yaml:"distro,omitempty"`
-	RunOn             []string `json:"run_on,omitempty" yaml:"run_on,omitempty"`
-	Priority          int      `json:"priority,omitempty" yaml:"priority,omitempty"`
-	ExecTimeoutSecs   int      `json:"exec_timeout_secs,omitempty" yaml:"exec_timeout_secs,omitempty"`
-	Batchtime         int      `json:"batchtime,omitempty" yaml:"batchtime,omitempty"`
-	CronBatchtime     string
-	Activate          *bool      `json:"activate,omitempty" yaml:"activate,omitempty"`
-	Disable           *bool      `json:"disable,omitempty" yaml:"disable,omitempty"`
-	Patchable         *bool      `json:"patchable,omitempty" yaml:"patchable,omitempty"`
-	PatchOnly         *bool      `json:"patch_only,omitempty" yaml:"patch_only,omitempty"`
-	AllowForGitTag    *bool      `json:"allow_for_git_tag,omitempty" yaml:"allow_for_git_tag,omitempty"`
-	GitTagOnly        *bool      `json:"git_tag_only,omitempty" yaml:"git_tag_only,omitempty"`
-	AllowedRequesters []string   `json:"allowed_requesters,omitempty" yaml:"allowed_requesters,omitempty"`
-	TaskGroup         *TaskGroup `json:"task_group,omitempty" yaml:"task_group,omitempty"`
-	CreateCheckRun    *CheckRun  `json:"create_check_run,omitempty" yaml:"create_check_run,omitempty"`
+	Distro            []string         `json:"distros,omitempty" yaml:"distro,omitempty"`
+	RunOn             []string         `json:"run_on,omitempty" yaml:"run_on,omitempty"`
+	DependsOn         []TaskDependency `json:"depends_on,omitempty" yaml:"depends_on,omitempty"`
+	Priority          int              `json:"priority,omitempty" yaml:"priority,omitempty"`
+	ExecTimeoutSecs   int              `json:"exec_timeout_secs,omitempty" yaml:"exec_timeout_secs,omitempty"`
+	Batchtime         int              `json:"batchtime,omitempty" yaml:"batchtime,omitempty"`
+	CronBatchtime     string           `json:"cron_batchtime" yaml:"cron_batchtime"`
+	Activate          *bool            `json:"activate,omitempty" yaml:"activate,omitempty"`
+	Disable           *bool            `json:"disable,omitempty" yaml:"disable,omitempty"`
+	Patchable         *bool            `json:"patchable,omitempty" yaml:"patchable,omitempty"`
+	PatchOnly         *bool            `json:"patch_only,omitempty" yaml:"patch_only,omitempty"`
+	AllowForGitTag    *bool            `json:"allow_for_git_tag,omitempty" yaml:"allow_for_git_tag,omitempty"`
+	GitTagOnly        *bool            `json:"git_tag_only,omitempty" yaml:"git_tag_only,omitempty"`
+	AllowedRequesters []string         `json:"allowed_requesters,omitempty" yaml:"allowed_requesters,omitempty"`
+	TaskGroup         *TaskGroup       `json:"task_group,omitempty" yaml:"task_group,omitempty"`
+	CreateCheckRun    *CheckRun        `json:"create_check_run,omitempty" yaml:"create_check_run,omitempty"`
 }
 
 type CheckRun struct {
@@ -70,6 +71,11 @@ func (ts *TaskSpec) SetDistros(distros []string) *TaskSpec { ts.Distro = distros
 
 func (ts *TaskSpec) SetRunOn(distros ...string) *TaskSpec {
 	ts.RunOn = distros
+	return ts
+}
+
+func (ts *TaskSpec) SetDependsOn(deps ...TaskDependency) *TaskSpec {
+	ts.DependsOn = deps
 	return ts
 }
 
