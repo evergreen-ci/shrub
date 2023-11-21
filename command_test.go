@@ -36,6 +36,11 @@ func TestCommandDefinition(t *testing.T) {
 			assert(t, cmd.CommandName == "foo", "setter mutates object")
 			assert(t, c2 == cmd, "chainable")
 		},
+		"RetryOnFailureSetter": func(t *testing.T, cmd *CommandDefinition) {
+			c2 := cmd.Retry(true)
+			assert(t, cmd.RetryOnFailure == true, "setter mutates object")
+			assert(t, c2 == cmd, "chainable")
+		},
 		"TimeoutSetterValidValues": func(t *testing.T, cmd *CommandDefinition) {
 			c2 := cmd.Timeout(time.Second)
 			assert(t, c2 == cmd, "chainable")
@@ -46,7 +51,7 @@ func TestCommandDefinition(t *testing.T) {
 			assert(t, cmd.TimeoutSecs == 60, "one minute")
 		},
 		"TimeoutWithSmallValue": func(t *testing.T, cmd *CommandDefinition) {
-			assert(t, cmd.TimeoutSecs == 0, "defauilt")
+			assert(t, cmd.TimeoutSecs == 0, "default")
 			c2 := cmd.Timeout(time.Millisecond)
 			assert(t, c2 == cmd, "chainable")
 			assert(t, cmd.TimeoutSecs == 0, "zero")
