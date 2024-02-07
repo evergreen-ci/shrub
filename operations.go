@@ -84,6 +84,7 @@ func shellExecFactory() Command { return CmdExecShell{} }
 type CmdS3Put struct {
 	AWSKey                        string   `json:"aws_key" yaml:"aws_key"`
 	AWSSecret                     string   `json:"aws_secret" yaml:"aws_secret"`
+	AWSSessionToken               string   `json:"aws_session_token" yaml:"aws_session_token"`
 	Bucket                        string   `json:"bucket" yaml:"bucket"`
 	Region                        string   `json:"region,omitempty" yaml:"region,omitempty"`
 	ContentType                   string   `json:"content_type" yaml:"content_type"`
@@ -119,14 +120,15 @@ func (c CmdS3Put) Resolve() *CommandDefinition {
 func s3PutFactory() Command { return CmdS3Put{} }
 
 type CmdS3Get struct {
-	AWSKey        string   `json:"aws_key" yaml:"aws_key"`
-	AWSSecret     string   `json:"aws_secret" yaml:"aws_secret"`
-	Region        string   `json:"region,omitempty" yaml:"region,omitempty"`
-	RemoteFile    string   `json:"remote_file" yaml:"remote_file"`
-	Bucket        string   `json:"bucket" yaml:"bucket"`
-	LocalFile     string   `json:"local_file,omitempty" yaml:"local_file,omitempty"`
-	ExtractTo     string   `json:"extract_to,omitempty" yaml:"extract_to,omitempty"`
-	BuildVariants []string `json:"build_variants,omitempty" yaml:"build_variants,omitempty"`
+	AWSKey          string   `json:"aws_key" yaml:"aws_key"`
+	AWSSecret       string   `json:"aws_secret" yaml:"aws_secret"`
+	AWSSessionToken string   `json:"aws_session_token" yaml:"aws_session_token"`
+	Region          string   `json:"region,omitempty" yaml:"region,omitempty"`
+	RemoteFile      string   `json:"remote_file" yaml:"remote_file"`
+	Bucket          string   `json:"bucket" yaml:"bucket"`
+	LocalFile       string   `json:"local_file,omitempty" yaml:"local_file,omitempty"`
+	ExtractTo       string   `json:"extract_to,omitempty" yaml:"extract_to,omitempty"`
+	BuildVariants   []string `json:"build_variants,omitempty" yaml:"build_variants,omitempty"`
 }
 
 func (c CmdS3Get) Name() string    { return "s3.get" }
@@ -140,9 +142,10 @@ func (c CmdS3Get) Resolve() *CommandDefinition {
 func s3GetFactory() Command { return CmdS3Get{} }
 
 type CmdS3Copy struct {
-	AWSKey    string `json:"aws_key" yaml:"aws_key"`
-	AWSSecret string `json:"aws_secret" yaml:"aws_secret"`
-	Files     []struct {
+	AWSKey          string `json:"aws_key" yaml:"aws_key"`
+	AWSSecret       string `json:"aws_secret" yaml:"aws_secret"`
+	AWSSessionToken string `json:"aws_session_token" yaml:"aws_session_token"`
+	Files           []struct {
 		Source struct {
 			Bucket string `json:"bucket" yaml:"bucket"`
 			Path   string `json:"path" yaml:"path"`
