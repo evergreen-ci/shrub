@@ -405,20 +405,20 @@ type CmdHostCreate struct {
 	Retries             int    `json:"retries,omitempty" yaml:"retries,omitempty"`
 
 	// EC2-related settings
-	AMI             string                `json:"ami,omitempty" yaml:"ami,omitempty"`
-	Distro          string                `json:"distro,omitempty" yaml:"distro,omitempty"`
-	EBSDevices      []HostCreateEBSDevice `json:"ebs_block_device,omitempty" yaml:"ebs_block_device,omitempty"`
-	InstanceType    string                `json:"instance_type,omitempty" yaml:"instance_type,omitempty"`
-	IPv6            bool                  `json:"ipv6,omitempty" yaml:"ipv6,omitempty"`
-	Region          string                `json:"region,omitempty" yaml:"region,omitempty"`
-	SecurityGroups  []string              `json:"security_group_ids,omitempty" yaml:"security_group_ids,omitempty"`
-	Spot            bool                  `json:"spot,omitempty" yaml:"spot,omitempty"`
-	Subnet          string                `json:"subnet_id,omitempty" yaml:"subnet_id,omitempty"`
-	UserdataFile    string                `json:"userdata_file,omitempty" yaml:"userdata_file,omitempty"`
-	UserdataCommand string                `json:"userdata_command,omitempty" yaml:"userdata_command,omitempty"`
-	AWSKeyID        string                `json:"aws_access_key_id,omitempty" yaml:"aws_access_key_id,omitempty"`
-	AWSSecret       string                `json:"aws_secret_access_key,omitempty" yaml:"aws_secret_access_key,omitempty"`
-	KeyName         string                `json:"key_name,omitempty" yaml:"key_name,omitempty"`
+	AMI            string                `json:"ami,omitempty" yaml:"ami,omitempty"`
+	Distro         string                `json:"distro,omitempty" yaml:"distro,omitempty"`
+	EBSDevices     []HostCreateEBSDevice `json:"ebs_block_device,omitempty" yaml:"ebs_block_device,omitempty"`
+	InstanceType   string                `json:"instance_type,omitempty" yaml:"instance_type,omitempty"`
+	IPv6           bool                  `json:"ipv6,omitempty" yaml:"ipv6,omitempty"`
+	Region         string                `json:"region,omitempty" yaml:"region,omitempty"`
+	SecurityGroups []string              `json:"security_group_ids,omitempty" yaml:"security_group_ids,omitempty"`
+	Spot           bool                  `json:"spot,omitempty" yaml:"spot,omitempty"`
+	Subnet         string                `json:"subnet_id,omitempty" yaml:"subnet_id,omitempty"`
+	UserdataFile   string                `json:"userdata_file,omitempty" yaml:"userdata_file,omitempty"`
+	AWSKeyID       string                `json:"aws_access_key_id,omitempty" yaml:"aws_access_key_id,omitempty"`
+	AWSSecret      string                `json:"aws_secret_access_key,omitempty" yaml:"aws_secret_access_key,omitempty"`
+	KeyName        string                `json:"key_name,omitempty" yaml:"key_name,omitempty"`
+	Tenancy        string                `json:"tenancy,omitempty" yaml:"tenancy,omitempty"`
 
 	// Docker-related settings
 	Image                    string                           `json:"image,omitempty" yaml:"image,omitempty"`
