@@ -31,6 +31,7 @@ func TestWellformedOperations(t *testing.T) {
 		"expansions.update":         CmdExpansionsUpdate{},
 		"expansions.write":          CmdExpansionsWrite{},
 		"json.send":                 CmdJSONSend{},
+		"papertrail.trace":          CmdPapertrailTrace{},
 		"perf.send":                 CmdPerfSend{},
 		"timeout.update":            CmdTimeoutUpdate{},
 	}

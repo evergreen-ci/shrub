@@ -531,6 +531,25 @@ func (c CmdJSONSend) Resolve() *CommandDefinition {
 
 func jsonSendFactory() Command { return CmdJSONSend{} }
 
+type CmdPapertrailTrace struct {
+	KeyID     string   `json:"key_id" yaml:"key_id"`
+	SecretKey string   `json:"secret_key,omitempty" yaml:"secret_key,omitempty"`
+	Product   string   `json:"product,omitempty" yaml:"product,omitempty"`
+	Version   string   `json:"version,omitempty" yaml:"version,omitempty"`
+	Filenames []string `json:"filenames,omitempty" yaml:"filenames,omitempty"`
+}
+
+func (c CmdPapertrailTrace) Name() string    { return "papertrail.trace" }
+func (c CmdPapertrailTrace) Validate() error { return nil }
+func (c CmdPapertrailTrace) Resolve() *CommandDefinition {
+	return &CommandDefinition{
+		CommandName: c.Name(),
+		Params:      exportCmd(c),
+	}
+}
+
+func papertrailTraceFactory() Command { return CmdPapertrailTrace{} }
+
 type CmdPerfSend struct {
 	File      string `json:"file" yaml:"file"`
 	AWSKey    string `json:"aws_key,omitempty" yaml:"aws_key,omitempty"`
