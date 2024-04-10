@@ -36,6 +36,7 @@ func init() {
 		expansionsUpdateFactory,
 		expansionsWriteFactory,
 		jsonSendFactory,
+		papertrailTraceFactory,
 		perfSendFactory,
 		timeoutUpdateFactory,
 	}
