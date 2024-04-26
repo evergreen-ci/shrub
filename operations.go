@@ -228,6 +228,7 @@ type CmdGetProject struct {
 	Revisions         map[string]string `json:"revisions,omitempty" yaml:"revisions,omitempty"`
 	ShallowClone      bool              `json:"shallow_clone,omitempty" yaml:"shallow_clone,omitempty"`
 	RecurseSubmodules bool              `json:"recurse_submodules,omitempty" yaml:"recurse_submodules,omitempty"`
+	FullClone         bool              `json:"full_clone,omitempty" yaml:"full_clone,omitempty"`
 	CommitterName     string            `json:"committer_name,omitempty" yaml:"committer_name,omitempty"`
 	CommitterEmail    string            `json:"committer_email,omitempty" yaml:"committer_email,omitempty"`
 }
