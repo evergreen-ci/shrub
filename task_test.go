@@ -178,17 +178,6 @@ func TestTaskBuilder(t *testing.T) {
 			require(t, task.Commands[0].Vars != nil)
 			assert(t, task.Commands[0].Vars["a"] == "val")
 		},
-		"TagAdder": func(t *testing.T, task *Task) {
-			require(t, len(task.Tags) == 0, "default")
-			task.Tag()
-			assert(t, len(task.Tags) == 0, "noop")
-			task.Tag("one")
-			assert(t, len(task.Tags) == 1, "first")
-			task.Tag("two")
-			assert(t, len(task.Tags) == 2, "add again")
-			task.Tag("two", "43")
-			assert(t, len(task.Tags) == 4, "multi add without deduplicating")
-		},
 		"RunOnAdder": func(t *testing.T, task *Task) {
 			require(t, len(task.DistroRunOn) == 0, "default")
 			task.RunOn()

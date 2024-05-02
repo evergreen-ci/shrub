@@ -18,14 +18,6 @@ func TestVariantBuilders(t *testing.T) {
 			assert(t, v.BuildDisplayName == "foo", "expected value")
 			assert(t, v2 == v, "chainable")
 		},
-		"TagSetter": func(t *testing.T, v *Variant) {
-			assert(t, len(v.Tags) == 0, "default value")
-			v2 := v.SetTags("tag0", "tag1")
-			require(t, len(v.Tags) == 2)
-			assert(t, v.Tags[0] == "tag0", "expected value")
-			assert(t, v.Tags[1] == "tag1", "expected value")
-			assert(t, v2 == v, "chainable")
-		},
 		"BatchTimeSetter": func(t *testing.T, v *Variant) {
 			assert(t, v.BatchTimeSecs == 0, "default value")
 			v2 := v.BatchTime(12)

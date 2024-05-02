@@ -5,7 +5,6 @@ type Task struct {
 	Name               string           `json:"name" yaml:"name"`
 	Dependencies       []TaskDependency `json:"depends_on,omitempty" yaml:"dependencies,omitempty"`
 	Commands           CommandSequence  `json:"commands" yaml:"commands"`
-	Tags               []string         `json:"tags,omitempty" yaml:"tags,omitempty"`
 	DistroRunOn        []string         `json:"run_on,omitempty" yaml:"run_on,omitempty"`
 	PriorityOverride   int              `json:"priority,omitempty" yaml:"priority_override,omitempty"`
 	ExecTimeoutSecs    int              `json:"exec_timeout_secs,omitempty" yaml:"exec_timeout_secs,omitempty"`
@@ -82,11 +81,6 @@ func (t *Task) Function(fns ...string) *Task {
 		})
 	}
 
-	return t
-}
-
-func (t *Task) Tag(tags ...string) *Task {
-	t.Tags = append(t.Tags, tags...)
 	return t
 }
 

@@ -4,7 +4,6 @@ package shrub
 type Variant struct {
 	BuildName        string                  `json:"name,omitempty" yaml:"name,omitempty"`
 	BuildDisplayName string                  `json:"display_name,omitempty" yaml:"display_name,omitempty"`
-	Tags             []string                `json:"tags,omitempty" yaml:"omitempty"`
 	BatchTimeSecs    int                     `json:"batchtime,omitempty" yaml:"batchtime,omitempty"`
 	CronBatchTime    string                  `json:"cron,omitempty" yaml:"cron,omitempty"`
 	Stepback         *bool                   `json:"stepback,omitempty" yaml:"stepback,omitempty"`
@@ -144,11 +143,7 @@ func (ts *TaskSpec) AllowedRequester(requesters ...string) *TaskSpec {
 	return ts
 }
 
-func (v *Variant) Name(id string) *Variant { v.BuildName = id; return v }
-func (v *Variant) SetTags(tags ...string) *Variant {
-	v.Tags = tags
-	return v
-}
+func (v *Variant) Name(id string) *Variant                    { v.BuildName = id; return v }
 func (v *Variant) BatchTime(batchTimeSecs int) *Variant       { v.BatchTimeSecs = batchTimeSecs; return v }
 func (v *Variant) SetCronBatchTime(batchTime string) *Variant { v.CronBatchTime = batchTime; return v }
 func (v *Variant) SetStepback(stepback *bool) *Variant        { v.Stepback = stepback; return v }
