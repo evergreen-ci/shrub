@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+
+	"github.com/google/go-github/v52/github"
 )
 
 ////////////////////////////////////////////////////////////////////////
@@ -585,3 +587,22 @@ func (c CmdTimeoutUpdate) Resolve() *CommandDefinition {
 	}
 }
 func timeoutUpdateFactory() Command { return CmdTimeoutUpdate{} }
+
+type CmdGitHubGenerateToken struct {
+	Owner         string `json:"owner,omitempty" yaml:"owner,omitempty"`
+	Repo          string `json:"repo,omitempty" yaml:"repo,omitempty"`
+	ExpansionName string `json:"expansion_name,omitempty" yaml:"expansion_name,omitempty"`
+	// Permissions is a map of permissions to grant to the token. If this is nil,
+	// the token will have all the permissions of the GitHub app.
+	Permissions *github.InstallationPermissions `json:"permissions,omitempty" yaml:"permissions,omitempty"`
+}
+
+func (c CmdGitHubGenerateToken) Name() string    { return "github.generate_token" }
+func (c CmdGitHubGenerateToken) Validate() error { return nil }
+func (c CmdGitHubGenerateToken) Resolve() *CommandDefinition {
+	return &CommandDefinition{
+		CommandName: c.Name(),
+		Params:      exportCmd(c),
+	}
+}
+func githubGenerateTokenFactory() Command { return CmdGitHubGenerateToken{} }

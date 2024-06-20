@@ -39,6 +39,7 @@ func init() {
 		papertrailTraceFactory,
 		perfSendFactory,
 		timeoutUpdateFactory,
+		githubGenerateTokenFactory,
 	}
 	registeredCommands.mu.Lock()
 	defer registeredCommands.mu.Unlock()
