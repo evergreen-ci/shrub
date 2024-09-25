@@ -228,6 +228,7 @@ func setExpansionsFactory() Command { return CmdSetExpansions{} }
 type CmdGetProject struct {
 	Directory         string            `json:"directory" yaml:"directory"`
 	Token             string            `json:"token,omitempty" yaml:"token,omitempty"`
+	IsOauth           bool              `json:"is_oauth,omitempty" yaml:"is_oauth,omitempty"`
 	Revisions         map[string]string `json:"revisions,omitempty" yaml:"revisions,omitempty"`
 	ShallowClone      bool              `json:"shallow_clone,omitempty" yaml:"shallow_clone,omitempty"`
 	RecurseSubmodules bool              `json:"recurse_submodules,omitempty" yaml:"recurse_submodules,omitempty"`
