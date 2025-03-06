@@ -4,7 +4,7 @@ package shrub
 type Variant struct {
 	BuildName        string                  `json:"name,omitempty" yaml:"name,omitempty"`
 	BuildDisplayName string                  `json:"display_name,omitempty" yaml:"display_name,omitempty"`
-	Tags             []string                `json:"tags,omitempty" yaml:"omitempty"`
+	Tags             []string                `json:"tags,omitempty" yaml:"tags,omitempty"`
 	BatchTimeSecs    int                     `json:"batchtime,omitempty" yaml:"batchtime,omitempty"`
 	CronBatchTime    string                  `json:"cron,omitempty" yaml:"cron,omitempty"`
 	Stepback         *bool                   `json:"stepback,omitempty" yaml:"stepback,omitempty"`
