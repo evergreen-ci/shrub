@@ -39,7 +39,7 @@ type TaskSpec struct {
 	Priority          int              `json:"priority,omitempty" yaml:"priority,omitempty"`
 	ExecTimeoutSecs   int              `json:"exec_timeout_secs,omitempty" yaml:"exec_timeout_secs,omitempty"`
 	Batchtime         int              `json:"batchtime,omitempty" yaml:"batchtime,omitempty"`
-	CronBatchtime     string           `json:"cron_batchtime" yaml:"cron_batchtime"`
+	CronBatchtime     string           `json:"cron_batchtime,omitempty" yaml:"cron_batchtime,omitempty"`
 	Activate          *bool            `json:"activate,omitempty" yaml:"activate,omitempty"`
 	Disable           *bool            `json:"disable,omitempty" yaml:"disable,omitempty"`
 	Patchable         *bool            `json:"patchable,omitempty" yaml:"patchable,omitempty"`
