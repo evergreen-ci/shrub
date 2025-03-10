@@ -4,7 +4,7 @@ package shrub
 type Variant struct {
 	BuildName        string                  `json:"name,omitempty" yaml:"name,omitempty"`
 	BuildDisplayName string                  `json:"display_name,omitempty" yaml:"display_name,omitempty"`
-	Tags             []string                `json:"tags,omitempty" yaml:"omitempty"`
+	Tags             []string                `json:"tags,omitempty" yaml:"tags,omitempty"`
 	BatchTimeSecs    int                     `json:"batchtime,omitempty" yaml:"batchtime,omitempty"`
 	CronBatchTime    string                  `json:"cron,omitempty" yaml:"cron,omitempty"`
 	Stepback         *bool                   `json:"stepback,omitempty" yaml:"stepback,omitempty"`
@@ -39,7 +39,7 @@ type TaskSpec struct {
 	Priority          int              `json:"priority,omitempty" yaml:"priority,omitempty"`
 	ExecTimeoutSecs   int              `json:"exec_timeout_secs,omitempty" yaml:"exec_timeout_secs,omitempty"`
 	Batchtime         int              `json:"batchtime,omitempty" yaml:"batchtime,omitempty"`
-	CronBatchtime     string           `json:"cron_batchtime" yaml:"cron_batchtime"`
+	CronBatchtime     string           `json:"cron_batchtime,omitempty" yaml:"cron_batchtime,omitempty"`
 	Activate          *bool            `json:"activate,omitempty" yaml:"activate,omitempty"`
 	Disable           *bool            `json:"disable,omitempty" yaml:"disable,omitempty"`
 	Patchable         *bool            `json:"patchable,omitempty" yaml:"patchable,omitempty"`
