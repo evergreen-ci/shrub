@@ -1,6 +1,6 @@
 module github.com/evergreen-ci/shrub
 
-go 1.24
+go 1.23
 
 require (
 	github.com/google/go-github/v52 v52.0.0
