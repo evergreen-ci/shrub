@@ -482,14 +482,16 @@ func (c CmdHostList) Resolve() *CommandDefinition {
 func hostListFactory() Command { return CmdHostList{} }
 
 type CmdExpansionsUpdate struct {
-	File              string `json:"file,omitempty" yaml:"file,omitempty"`
-	IgnoreMissingFile bool   `json:"ignore_missing_file,omitempty" yaml:"ignore_missing_file,omitempty"`
+	File              string                  `json:"file,omitempty" yaml:"file,omitempty"`
+	IgnoreMissingFile bool                    `json:"ignore_missing_file,omitempty" yaml:"ignore_missing_file,omitempty"`
+	Updates           []ExpansionUpdateParams `json:"updates,omitempty" yaml:"updates,omitempty"`
 }
 
 type ExpansionUpdateParams struct {
 	Key    string `json:"key,omitempty" yaml:"key,omitempty"`
 	Value  string `json:"value,omitempty" yaml:"value,omitempty"`
 	Concat string `json:"concat,omitempty" yaml:"concat,omitempty"`
+	Redact bool   `json:"redact,omitempty" yaml:"redact,omitempty"`
 }
 
 func (c CmdExpansionsUpdate) Name() string    { return "expansions.update" }
