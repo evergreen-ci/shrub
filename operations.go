@@ -87,7 +87,7 @@ func shellExecFactory() Command { return CmdExecShell{} }
 type CmdS3Put struct {
 	AWSKey                        string   `json:"aws_key" yaml:"aws_key"`
 	AWSSecret                     string   `json:"aws_secret" yaml:"aws_secret"`
-	AWSSessionToken               string   `json:"aws_session_token" yaml:"aws_session_token"`
+	AWSSessionToken               string   `json:"aws_session_token,omitempty" yaml:"aws_session_token,omitempty"`
 	Bucket                        string   `json:"bucket" yaml:"bucket"`
 	Region                        string   `json:"region,omitempty" yaml:"region,omitempty"`
 	ContentType                   string   `json:"content_type" yaml:"content_type"`
@@ -125,7 +125,7 @@ func s3PutFactory() Command { return CmdS3Put{} }
 type CmdS3Get struct {
 	AWSKey          string   `json:"aws_key" yaml:"aws_key"`
 	AWSSecret       string   `json:"aws_secret" yaml:"aws_secret"`
-	AWSSessionToken string   `json:"aws_session_token" yaml:"aws_session_token"`
+	AWSSessionToken string   `json:"aws_session_token,omitempty" yaml:"aws_session_token,omitempty"`
 	Region          string   `json:"region,omitempty" yaml:"region,omitempty"`
 	RemoteFile      string   `json:"remote_file" yaml:"remote_file"`
 	Bucket          string   `json:"bucket" yaml:"bucket"`
@@ -339,7 +339,7 @@ type CmdArchiveCreate struct {
 	Target       string        `json:"target" yaml:"target"`
 	SourceDir    string        `json:"source_dir" yaml:"source_dir"`
 	Include      []string      `json:"include" yaml:"include"`
-	ExcludeFiles []string      `json:"exclude_files" yaml:"exclude_files"`
+	ExcludeFiles []string      `json:"exclude_files,omitempty" yaml:"exclude_files,omitempty"`
 }
 
 func (c CmdArchiveCreate) Name() string    { return c.Format.createCmdName() }
