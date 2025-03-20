@@ -62,7 +62,7 @@ type CmdExecShell struct {
 	Shell                         string            `json:"shell,omitempty" yaml:"shell,omitempty"`
 	Env                           map[string]string `json:"env,omitempty" yaml:"env,omitempty"`
 	AddExpansionsToEnv            map[string]string `json:"add_expansions_to_env,omitempty" yaml:"add_expansions_to_env,omitempty"`
-	IncludeExpansionsInEnv        map[string]string `json:"include_expansions_in_env,omitempty" yaml:"include_expansions_inenv,omitempty"`
+	IncludeExpansionsInEnv        []string          `json:"include_expansions_in_env,omitempty" yaml:"include_expansions_inenv,omitempty"`
 	AddToPath                     []string          `json:"add_to_path,omitempty" yaml:"add_to_path,omitempty"`
 	ContinueOnError               bool              `json:"continue_on_err,omitempty" yaml:"continue_on_err,omitempty"`
 	Background                    bool              `json:"background,omitempty" yaml:"background,omitempty"`
@@ -87,7 +87,7 @@ func shellExecFactory() Command { return CmdExecShell{} }
 type CmdS3Put struct {
 	AWSKey                        string   `json:"aws_key" yaml:"aws_key"`
 	AWSSecret                     string   `json:"aws_secret" yaml:"aws_secret"`
-	AWSSessionToken               string   `json:"aws_session_token" yaml:"aws_session_token"`
+	AWSSessionToken               string   `json:"aws_session_token,omitempty" yaml:"aws_session_token,omitempty"`
 	Bucket                        string   `json:"bucket" yaml:"bucket"`
 	Region                        string   `json:"region,omitempty" yaml:"region,omitempty"`
 	ContentType                   string   `json:"content_type" yaml:"content_type"`
@@ -125,7 +125,7 @@ func s3PutFactory() Command { return CmdS3Put{} }
 type CmdS3Get struct {
 	AWSKey          string   `json:"aws_key" yaml:"aws_key"`
 	AWSSecret       string   `json:"aws_secret" yaml:"aws_secret"`
-	AWSSessionToken string   `json:"aws_session_token" yaml:"aws_session_token"`
+	AWSSessionToken string   `json:"aws_session_token,omitempty" yaml:"aws_session_token,omitempty"`
 	Region          string   `json:"region,omitempty" yaml:"region,omitempty"`
 	RemoteFile      string   `json:"remote_file" yaml:"remote_file"`
 	Bucket          string   `json:"bucket" yaml:"bucket"`
@@ -339,7 +339,7 @@ type CmdArchiveCreate struct {
 	Target       string        `json:"target" yaml:"target"`
 	SourceDir    string        `json:"source_dir" yaml:"source_dir"`
 	Include      []string      `json:"include" yaml:"include"`
-	ExcludeFiles []string      `json:"exclude_files" yaml:"exclude_files"`
+	ExcludeFiles []string      `json:"exclude_files,omitempty" yaml:"exclude_files,omitempty"`
 }
 
 func (c CmdArchiveCreate) Name() string    { return c.Format.createCmdName() }
@@ -482,14 +482,16 @@ func (c CmdHostList) Resolve() *CommandDefinition {
 func hostListFactory() Command { return CmdHostList{} }
 
 type CmdExpansionsUpdate struct {
-	File              string `json:"file,omitempty" yaml:"file,omitempty"`
-	IgnoreMissingFile bool   `json:"ignore_missing_file,omitempty" yaml:"ignore_missing_file,omitempty"`
+	File              string                  `json:"file,omitempty" yaml:"file,omitempty"`
+	IgnoreMissingFile bool                    `json:"ignore_missing_file,omitempty" yaml:"ignore_missing_file,omitempty"`
+	Updates           []ExpansionUpdateParams `json:"updates,omitempty" yaml:"updates,omitempty"`
 }
 
 type ExpansionUpdateParams struct {
 	Key    string `json:"key,omitempty" yaml:"key,omitempty"`
 	Value  string `json:"value,omitempty" yaml:"value,omitempty"`
 	Concat string `json:"concat,omitempty" yaml:"concat,omitempty"`
+	Redact bool   `json:"redact,omitempty" yaml:"redact,omitempty"`
 }
 
 func (c CmdExpansionsUpdate) Name() string    { return "expansions.update" }
