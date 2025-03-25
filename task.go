@@ -3,7 +3,7 @@ package shrub
 // Task represents a single new task to generate.
 type Task struct {
 	Name               string           `json:"name" yaml:"name"`
-	Dependencies       []TaskDependency `json:"depends_on,omitempty" yaml:"dependencies,omitempty"`
+	Dependencies       []TaskDependency `json:"depends_on,omitempty" yaml:"depends_on,omitempty"`
 	Commands           CommandSequence  `json:"commands" yaml:"commands"`
 	Tags               []string         `json:"tags,omitempty" yaml:"tags,omitempty"`
 	DistroRunOn        []string         `json:"run_on,omitempty" yaml:"run_on,omitempty"`
