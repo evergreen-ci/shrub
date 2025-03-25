@@ -62,7 +62,7 @@ type commandRegistry struct {
 type commandFactory func() Command
 
 type CommandDefinition struct {
-	FunctionName        string                 `json:"func,omitempty" yaml:"function_name,omitempty"`
+	FunctionName        string                 `json:"func,omitempty" yaml:"func,omitempty"`
 	ExecutionType       string                 `json:"type,omitempty" yaml:"type,omitempty"`
 	DisplayName         string                 `json:"display_name,omitempty" yaml:"display_name,omitempty"`
 	CommandName         string                 `json:"command,omitempty" yaml:"command,omitempty"`

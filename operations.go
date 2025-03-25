@@ -68,8 +68,8 @@ type CmdExecShell struct {
 	Background                    bool              `json:"background,omitempty" yaml:"background,omitempty"`
 	Silent                        bool              `json:"silent,omitempty" yaml:"silent,omitempty"`
 	RedirectStandardErrorToOutput bool              `json:"redirect_standard_error_to_output,omitempty" yaml:"redirect_standard_error_to_output,omitempty"`
-	IgnoreStandardError           bool              `json:"ignore_standard_error" yaml:"ignore_standard_error"`
-	IgnoreStandardOutput          bool              `json:"ignore_standard_out" yaml:"ignore_standard_out"`
+	IgnoreStandardError           bool              `json:"ignore_standard_error,omitempty" yaml:"ignore_standard_error,omitempty"`
+	IgnoreStandardOutput          bool              `json:"ignore_standard_out,omitempty" yaml:"ignore_standard_out,omitempty"`
 	SystemLog                     bool              `json:"system_log,omitempty" yaml:"system_log,omitempty"`
 	WorkingDirectory              string            `json:"working_dir,omitempty" yaml:"working_dir,omitempty"`
 }
