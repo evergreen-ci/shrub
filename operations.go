@@ -132,6 +132,7 @@ type CmdS3Get struct {
 	LocalFile       string   `json:"local_file,omitempty" yaml:"local_file,omitempty"`
 	ExtractTo       string   `json:"extract_to,omitempty" yaml:"extract_to,omitempty"`
 	BuildVariants   []string `json:"build_variants,omitempty" yaml:"build_variants,omitempty"`
+	Optional        bool     `json:"optional,omitempty" yaml:"optional,omitempty"`
 }
 
 func (c CmdS3Get) Name() string    { return "s3.get" }
