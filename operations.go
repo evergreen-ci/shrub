@@ -101,6 +101,7 @@ type CmdS3Put struct {
 	ResourceDisplayName           string   `json:"display_name,omitempty" yaml:"display_name,omitempty"`
 	BuildVariants                 []string `json:"build_variants,omitempty" yaml:"build_variants,omitempty"`
 	Optional                      bool     `json:"optional,omitempty" yaml:"optional,omitempty"`
+	SkipExisting                  bool     `json:"skip_existing,omitempty" yaml:"skip_existing,omitempty"`
 }
 
 func (c CmdS3Put) Name() string { return "s3.put" }
