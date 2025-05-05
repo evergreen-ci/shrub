@@ -102,6 +102,7 @@ type CmdS3Put struct {
 	BuildVariants                 []string `json:"build_variants,omitempty" yaml:"build_variants,omitempty"`
 	Optional                      bool     `json:"optional,omitempty" yaml:"optional,omitempty"`
 	SkipExisting                  bool     `json:"skip_existing,omitempty" yaml:"skip_existing,omitempty"`
+	RoleARN                       string   `json:"role_arn,omitempty" yaml:"role_arn,omitempty"`
 }
 
 func (c CmdS3Put) Name() string { return "s3.put" }
@@ -134,6 +135,7 @@ type CmdS3Get struct {
 	ExtractTo       string   `json:"extract_to,omitempty" yaml:"extract_to,omitempty"`
 	BuildVariants   []string `json:"build_variants,omitempty" yaml:"build_variants,omitempty"`
 	Optional        bool     `json:"optional,omitempty" yaml:"optional,omitempty"`
+	RoleARN         string   `json:"role_arn,omitempty" yaml:"role_arn,omitempty"`
 }
 
 func (c CmdS3Get) Name() string    { return "s3.get" }
