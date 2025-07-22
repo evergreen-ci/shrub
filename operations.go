@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/google/go-github/v52/github"
+	"github.com/google/go-github/v73/github"
 )
 
 ////////////////////////////////////////////////////////////////////////
