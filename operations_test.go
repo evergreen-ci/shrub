@@ -34,6 +34,8 @@ func TestWellformedOperations(t *testing.T) {
 		"papertrail.trace":          CmdPapertrailTrace{},
 		"perf.send":                 CmdPerfSend{},
 		"timeout.update":            CmdTimeoutUpdate{},
+		"github.generate_token":     CmdGitHubGenerateToken{},
+		"test_selection.get":        CmdTestSelectionGet{},
 	}
 
 	for name, cmd := range cases {

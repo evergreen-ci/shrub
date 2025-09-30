@@ -40,6 +40,7 @@ func init() {
 		perfSendFactory,
 		timeoutUpdateFactory,
 		githubGenerateTokenFactory,
+		testSelectionGetFactory,
 	}
 	registeredCommands.mu.Lock()
 	defer registeredCommands.mu.Unlock()
