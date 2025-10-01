@@ -613,3 +613,21 @@ func (c CmdGitHubGenerateToken) Resolve() *CommandDefinition {
 	}
 }
 func githubGenerateTokenFactory() Command { return CmdGitHubGenerateToken{} }
+
+type CmdTestSelectionGet struct {
+	OutputFile string   `json:"output_file,omitempty" yaml:"output_file,omitempty"`
+	Tests      []string `json:"tests,omitempty" yaml:"tests,omitempty"`
+	UsageRate  string   `json:"usage_rate,omitempty" yaml:"usage_rate,omitempty"`
+	Strategies string   `json:"strategies,omitempty" yaml:"strategies,omitempty"`
+}
+
+func (c CmdTestSelectionGet) Name() string    { return "test_selection.get" }
+func (c CmdTestSelectionGet) Validate() error { return nil }
+func (c CmdTestSelectionGet) Resolve() *CommandDefinition {
+	return &CommandDefinition{
+		CommandName: c.Name(),
+		Params:      exportCmd(c),
+	}
+}
+
+func testSelectionGetFactory() Command { return CmdTestSelectionGet{} }
