@@ -616,6 +616,7 @@ func githubGenerateTokenFactory() Command { return CmdGitHubGenerateToken{} }
 
 type CmdTestSelectionGet struct {
 	OutputFile string   `json:"output_file,omitempty" yaml:"output_file,omitempty"`
+	TestsFile  string   `json:"tests_file,omitempty" yaml:"tests_file,omitempty"`
 	Tests      []string `json:"tests,omitempty" yaml:"tests,omitempty"`
 	UsageRate  string   `json:"usage_rate,omitempty" yaml:"usage_rate,omitempty"`
 	Strategies string   `json:"strategies,omitempty" yaml:"strategies,omitempty"`
