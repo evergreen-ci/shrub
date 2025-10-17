@@ -103,6 +103,7 @@ type CmdS3Put struct {
 	Optional                      bool     `json:"optional,omitempty" yaml:"optional,omitempty"`
 	SkipExisting                  bool     `json:"skip_existing,omitempty" yaml:"skip_existing,omitempty"`
 	RoleARN                       string   `json:"role_arn,omitempty" yaml:"role_arn,omitempty"`
+	UploadChecksumSha256          bool     `json:"upload_checksum_sha256,omitempty" yaml:"upload_checksum_sha256,omitempty"`
 }
 
 func (c CmdS3Put) Name() string { return "s3.put" }
@@ -125,17 +126,18 @@ func (c CmdS3Put) Resolve() *CommandDefinition {
 func s3PutFactory() Command { return CmdS3Put{} }
 
 type CmdS3Get struct {
-	AWSKey          string   `json:"aws_key" yaml:"aws_key"`
-	AWSSecret       string   `json:"aws_secret" yaml:"aws_secret"`
-	AWSSessionToken string   `json:"aws_session_token,omitempty" yaml:"aws_session_token,omitempty"`
-	Region          string   `json:"region,omitempty" yaml:"region,omitempty"`
-	RemoteFile      string   `json:"remote_file" yaml:"remote_file"`
-	Bucket          string   `json:"bucket" yaml:"bucket"`
-	LocalFile       string   `json:"local_file,omitempty" yaml:"local_file,omitempty"`
-	ExtractTo       string   `json:"extract_to,omitempty" yaml:"extract_to,omitempty"`
-	BuildVariants   []string `json:"build_variants,omitempty" yaml:"build_variants,omitempty"`
-	Optional        bool     `json:"optional,omitempty" yaml:"optional,omitempty"`
-	RoleARN         string   `json:"role_arn,omitempty" yaml:"role_arn,omitempty"`
+	AWSKey                string   `json:"aws_key" yaml:"aws_key"`
+	AWSSecret             string   `json:"aws_secret" yaml:"aws_secret"`
+	AWSSessionToken       string   `json:"aws_session_token,omitempty" yaml:"aws_session_token,omitempty"`
+	Region                string   `json:"region,omitempty" yaml:"region,omitempty"`
+	RemoteFile            string   `json:"remote_file" yaml:"remote_file"`
+	Bucket                string   `json:"bucket" yaml:"bucket"`
+	LocalFile             string   `json:"local_file,omitempty" yaml:"local_file,omitempty"`
+	ExtractTo             string   `json:"extract_to,omitempty" yaml:"extract_to,omitempty"`
+	BuildVariants         []string `json:"build_variants,omitempty" yaml:"build_variants,omitempty"`
+	Optional              bool     `json:"optional,omitempty" yaml:"optional,omitempty"`
+	RoleARN               string   `json:"role_arn,omitempty" yaml:"role_arn,omitempty"`
+	RequireChecksumSha256 string   `json:"require_checksum_sha256,omitempty" yaml:"require_checksum_sha256,omitempty"`
 }
 
 func (c CmdS3Get) Name() string    { return "s3.get" }
