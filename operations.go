@@ -634,3 +634,86 @@ func (c CmdTestSelectionGet) Resolve() *CommandDefinition {
 }
 
 func testSelectionGetFactory() Command { return CmdTestSelectionGet{} }
+
+type CmdCacheSave struct {
+	CacheName       string   `json:"name" yaml:"name"`
+	Bucket          string   `json:"bucket" yaml:"bucket"`
+	RemotePath      string   `json:"remote_path" yaml:"remote_path"`
+	KeyFiles        []string `json:"key_files,omitempty" yaml:"key_files,omitempty"`
+	KeyExpansions   []string `json:"key_expansions" yaml:"key_expansions"`
+	AWSKey          string   `json:"aws_key,omitempty" yaml:"aws_key,omitempty"`
+	AWSSecret       string   `json:"aws_secret,omitempty" yaml:"aws_secret,omitempty"`
+	AWSSessionToken string   `json:"aws_session_token,omitempty" yaml:"aws_session_token,omitempty"`
+	RoleARN         string   `json:"role_arn,omitempty" yaml:"role_arn,omitempty"`
+	Region          string   `json:"region,omitempty" yaml:"region,omitempty"`
+	Paths           []string `json:"paths" yaml:"paths"`
+}
+
+func (c CmdCacheSave) Name() string { return "cache.save" }
+func (c CmdCacheSave) Validate() error {
+	switch {
+	case c.CacheName == "":
+		return errors.New("must specify name")
+	case c.Bucket == "":
+		return errors.New("must specify bucket")
+	case c.RemotePath == "":
+		return errors.New("must specify remote_path")
+	case len(c.KeyExpansions) == 0:
+		return errors.New("must specify at least one key_expansions value")
+	case c.RoleARN != "" && (c.AWSKey != "" || c.AWSSecret != "" || c.AWSSessionToken != ""):
+		return errors.New("role_arn and AWS credentials are mutually exclusive")
+	case c.RoleARN == "" && (c.AWSKey == "" || c.AWSSecret == ""):
+		return errors.New("must specify either role_arn or aws_key and aws_secret")
+	case len(c.Paths) == 0:
+		return errors.New("must specify at least one path")
+	default:
+		return nil
+	}
+}
+func (c CmdCacheSave) Resolve() *CommandDefinition {
+	return &CommandDefinition{
+		CommandName: c.Name(),
+		Params:      exportCmd(c),
+	}
+}
+func cacheSaveFactory() Command { return CmdCacheSave{} }
+
+type CmdCacheRestore struct {
+	CacheName       string   `json:"name" yaml:"name"`
+	Bucket          string   `json:"bucket" yaml:"bucket"`
+	RemotePath      string   `json:"remote_path" yaml:"remote_path"`
+	KeyFiles        []string `json:"key_files,omitempty" yaml:"key_files,omitempty"`
+	KeyExpansions   []string `json:"key_expansions" yaml:"key_expansions"`
+	AWSKey          string   `json:"aws_key,omitempty" yaml:"aws_key,omitempty"`
+	AWSSecret       string   `json:"aws_secret,omitempty" yaml:"aws_secret,omitempty"`
+	AWSSessionToken string   `json:"aws_session_token,omitempty" yaml:"aws_session_token,omitempty"`
+	RoleARN         string   `json:"role_arn,omitempty" yaml:"role_arn,omitempty"`
+	Region          string   `json:"region,omitempty" yaml:"region,omitempty"`
+}
+
+func (c CmdCacheRestore) Name() string { return "cache.restore" }
+func (c CmdCacheRestore) Validate() error {
+	switch {
+	case c.CacheName == "":
+		return errors.New("must specify name")
+	case c.Bucket == "":
+		return errors.New("must specify bucket")
+	case c.RemotePath == "":
+		return errors.New("must specify remote_path")
+	case len(c.KeyExpansions) == 0:
+		return errors.New("must specify at least one key_expansions value")
+	case c.RoleARN != "" && (c.AWSKey != "" || c.AWSSecret != "" || c.AWSSessionToken != ""):
+		return errors.New("role_arn and AWS credentials are mutually exclusive")
+	case c.RoleARN == "" && (c.AWSKey == "" || c.AWSSecret == ""):
+		return errors.New("must specify either role_arn or aws_key and aws_secret")
+	default:
+		return nil
+	}
+}
+func (c CmdCacheRestore) Resolve() *CommandDefinition {
+	return &CommandDefinition{
+		CommandName: c.Name(),
+		Params:      exportCmd(c),
+	}
+}
+func cacheRestoreFactory() Command { return CmdCacheRestore{} }

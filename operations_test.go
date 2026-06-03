@@ -36,6 +36,23 @@ func TestWellformedOperations(t *testing.T) {
 		"timeout.update":            CmdTimeoutUpdate{},
 		"github.generate_token":     CmdGitHubGenerateToken{},
 		"test_selection.get":        CmdTestSelectionGet{},
+		"cache.save": CmdCacheSave{
+			CacheName:     "myCache",
+			Bucket:        "my-bucket",
+			RemotePath:    "prefix/",
+			KeyExpansions: []string{"${project_id}"},
+			AWSKey:        "key",
+			AWSSecret:     "secret",
+			Paths:         []string{"vendor/"},
+		},
+		"cache.restore": CmdCacheRestore{
+			CacheName:     "myCache",
+			Bucket:        "my-bucket",
+			RemotePath:    "prefix/",
+			KeyExpansions: []string{"${project_id}"},
+			AWSKey:        "key",
+			AWSSecret:     "secret",
+		},
 	}
 
 	for name, cmd := range cases {
@@ -70,8 +87,23 @@ func TestPoorlyFormedOperations(t *testing.T) {
 		"s3put.nofile":        CmdS3Put{AWSKey: "foo", AWSSecret: "bar"},
 		"s3put.nosecret":      CmdS3Put{AWSKey: "foo", LocalFile: "baz"},
 		"s3put.nokey":         CmdS3Put{AWSSecret: "bar", LocalFile: "baz"},
-		"archive.create_auto": CmdArchiveCreate{Format: ArchiveFormat("auto")},
-		"archive.invalid":     CmdArchiveExtract{Format: ArchiveFormat("bleh")},
+		"archive.create_auto":              CmdArchiveCreate{Format: ArchiveFormat("auto")},
+		"archive.invalid":                  CmdArchiveExtract{Format: ArchiveFormat("bleh")},
+		"cache.save.empty":                 CmdCacheSave{},
+		"cache.save.noname":                CmdCacheSave{Bucket: "b", RemotePath: "r", KeyExpansions: []string{"k"}, AWSKey: "k", AWSSecret: "s", Paths: []string{"p"}},
+		"cache.save.nobucket":              CmdCacheSave{CacheName: "c", RemotePath: "r", KeyExpansions: []string{"k"}, AWSKey: "k", AWSSecret: "s", Paths: []string{"p"}},
+		"cache.save.noremotepath":          CmdCacheSave{CacheName: "c", Bucket: "b", KeyExpansions: []string{"k"}, AWSKey: "k", AWSSecret: "s", Paths: []string{"p"}},
+		"cache.save.nokeyexpansions":       CmdCacheSave{CacheName: "c", Bucket: "b", RemotePath: "r", AWSKey: "k", AWSSecret: "s", Paths: []string{"p"}},
+		"cache.save.nocreds":               CmdCacheSave{CacheName: "c", Bucket: "b", RemotePath: "r", KeyExpansions: []string{"k"}, Paths: []string{"p"}},
+		"cache.save.nopaths":               CmdCacheSave{CacheName: "c", Bucket: "b", RemotePath: "r", KeyExpansions: []string{"k"}, AWSKey: "k", AWSSecret: "s"},
+		"cache.save.rolearn_with_key":      CmdCacheSave{CacheName: "c", Bucket: "b", RemotePath: "r", KeyExpansions: []string{"k"}, RoleARN: "arn:aws:iam::123:role/r", AWSKey: "k", Paths: []string{"p"}},
+		"cache.restore.empty":              CmdCacheRestore{},
+		"cache.restore.noname":             CmdCacheRestore{Bucket: "b", RemotePath: "r", KeyExpansions: []string{"k"}, AWSKey: "k", AWSSecret: "s"},
+		"cache.restore.nobucket":           CmdCacheRestore{CacheName: "c", RemotePath: "r", KeyExpansions: []string{"k"}, AWSKey: "k", AWSSecret: "s"},
+		"cache.restore.noremotepath":       CmdCacheRestore{CacheName: "c", Bucket: "b", KeyExpansions: []string{"k"}, AWSKey: "k", AWSSecret: "s"},
+		"cache.restore.nokeyexpansions":    CmdCacheRestore{CacheName: "c", Bucket: "b", RemotePath: "r", AWSKey: "k", AWSSecret: "s"},
+		"cache.restore.nocreds":            CmdCacheRestore{CacheName: "c", Bucket: "b", RemotePath: "r", KeyExpansions: []string{"k"}},
+		"cache.restore.rolearn_with_token": CmdCacheRestore{CacheName: "c", Bucket: "b", RemotePath: "r", KeyExpansions: []string{"k"}, RoleARN: "arn:aws:iam::123:role/r", AWSSessionToken: "t"},
 	}
 
 	for name, cmd := range cases {
