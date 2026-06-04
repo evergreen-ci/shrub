@@ -104,6 +104,9 @@ func TestPoorlyFormedOperations(t *testing.T) {
 		"cache.restore.nokeyexpansions":    CmdCacheRestore{CacheName: "c", Bucket: "b", RemotePath: "r", AWSKey: "k", AWSSecret: "s"},
 		"cache.restore.nocreds":            CmdCacheRestore{CacheName: "c", Bucket: "b", RemotePath: "r", KeyExpansions: []string{"k"}},
 		"cache.restore.rolearn_with_token": CmdCacheRestore{CacheName: "c", Bucket: "b", RemotePath: "r", KeyExpansions: []string{"k"}, RoleARN: "arn:aws:iam::123:role/r", AWSSessionToken: "t"},
+		"cache.save.badname.underscore":    CmdCacheSave{CacheName: "my_cache", Bucket: "b", RemotePath: "r", KeyExpansions: []string{"k"}, AWSKey: "k", AWSSecret: "s", Paths: []string{"p"}},
+		"cache.save.badname.space":         CmdCacheSave{CacheName: "my cache", Bucket: "b", RemotePath: "r", KeyExpansions: []string{"k"}, AWSKey: "k", AWSSecret: "s", Paths: []string{"p"}},
+		"cache.restore.badname.underscore": CmdCacheRestore{CacheName: "my_cache", Bucket: "b", RemotePath: "r", KeyExpansions: []string{"k"}, AWSKey: "k", AWSSecret: "s"},
 	}
 
 	for name, cmd := range cases {
@@ -152,4 +155,34 @@ func TestCacheCommandsWithRoleARN(t *testing.T) {
 			require(t, rcmd != nil, cmd.Name(), "resolve should not return nil")
 		})
 	}
+}
+
+func TestCacheNameValidation(t *testing.T) {
+	base := func(name string) CmdCacheSave {
+		return CmdCacheSave{
+			CacheName:     name,
+			Bucket:        "b",
+			RemotePath:    "r",
+			KeyExpansions: []string{"${project_id}"},
+			AWSKey:        "k",
+			AWSSecret:     "s",
+			Paths:         []string{"vendor/"},
+		}
+	}
+
+	t.Run("literal valid name", func(t *testing.T) {
+		assert(t, base("my-cache-v2").Validate() == nil)
+	})
+	t.Run("expansion name bypasses regex", func(t *testing.T) {
+		assert(t, base("${cache_name}").Validate() == nil)
+	})
+	t.Run("underscore rejected", func(t *testing.T) {
+		assert(t, base("my_cache").Validate() != nil)
+	})
+	t.Run("space rejected", func(t *testing.T) {
+		assert(t, base("my cache").Validate() != nil)
+	})
+	t.Run("slash rejected", func(t *testing.T) {
+		assert(t, base("my/cache").Validate() != nil)
+	})
 }

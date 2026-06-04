@@ -4,9 +4,22 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"regexp"
+	"strings"
 
 	"github.com/google/go-github/v73/github"
 )
+
+// cacheNameRe is the set of characters allowed in a literal cache name.
+// Expansion expressions (${...}) are exempt and validated at agent runtime.
+var cacheNameRe = regexp.MustCompile(`^[a-zA-Z0-9-]+$`)
+
+// isExpandable reports whether s contains an Evergreen expansion expression.
+func isExpandable(s string) bool {
+	start := strings.Index(s, "${")
+	end := strings.Index(s, "}")
+	return start >= 0 && end > start
+}
 
 ////////////////////////////////////////////////////////////////////////
 //
@@ -654,6 +667,8 @@ func (c CmdCacheSave) Validate() error {
 	switch {
 	case c.CacheName == "":
 		return errors.New("must specify name")
+	case !isExpandable(c.CacheName) && !cacheNameRe.MatchString(c.CacheName):
+		return fmt.Errorf("name %q must match %s", c.CacheName, cacheNameRe.String())
 	case c.Bucket == "":
 		return errors.New("must specify bucket")
 	case c.RemotePath == "":
@@ -696,6 +711,8 @@ func (c CmdCacheRestore) Validate() error {
 	switch {
 	case c.CacheName == "":
 		return errors.New("must specify name")
+	case !isExpandable(c.CacheName) && !cacheNameRe.MatchString(c.CacheName):
+		return fmt.Errorf("name %q must match %s", c.CacheName, cacheNameRe.String())
 	case c.Bucket == "":
 		return errors.New("must specify bucket")
 	case c.RemotePath == "":
