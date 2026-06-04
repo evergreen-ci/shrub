@@ -96,7 +96,7 @@ func TestPoorlyFormedOperations(t *testing.T) {
 		"cache.save.nokeyexpansions":       CmdCacheSave{CacheName: "c", Bucket: "b", RemotePath: "r", AWSKey: "k", AWSSecret: "s", Paths: []string{"p"}},
 		"cache.save.nocreds":               CmdCacheSave{CacheName: "c", Bucket: "b", RemotePath: "r", KeyExpansions: []string{"k"}, Paths: []string{"p"}},
 		"cache.save.nopaths":               CmdCacheSave{CacheName: "c", Bucket: "b", RemotePath: "r", KeyExpansions: []string{"k"}, AWSKey: "k", AWSSecret: "s"},
-		"cache.save.rolearn_with_key":      CmdCacheSave{CacheName: "c", Bucket: "b", RemotePath: "r", KeyExpansions: []string{"k"}, RoleARN: "arn:aws:iam::123:role/r", AWSKey: "k", Paths: []string{"p"}},
+		"cache.save.rolearn_with_key":      CmdCacheSave{CacheName: "c", Bucket: "b", RemotePath: "r", KeyExpansions: []string{"k"}, RoleARN: "arn:aws:iam::123:role/r", AWSKey: "k", AWSSecret: "s", Paths: []string{"p"}},
 		"cache.restore.empty":              CmdCacheRestore{},
 		"cache.restore.noname":             CmdCacheRestore{Bucket: "b", RemotePath: "r", KeyExpansions: []string{"k"}, AWSKey: "k", AWSSecret: "s"},
 		"cache.restore.nobucket":           CmdCacheRestore{CacheName: "c", RemotePath: "r", KeyExpansions: []string{"k"}, AWSKey: "k", AWSSecret: "s"},
@@ -124,4 +124,32 @@ func TestPoorlyFormedOperations(t *testing.T) {
 		res := exportCmd(unmarshableCmd{name: "sad"})
 		assert(t, res == nil)
 	})
+}
+
+func TestCacheCommandsWithRoleARN(t *testing.T) {
+	cases := []Command{
+		CmdCacheSave{
+			CacheName:     "myCache",
+			Bucket:        "my-bucket",
+			RemotePath:    "prefix/",
+			KeyExpansions: []string{"${project_id}"},
+			RoleARN:       "arn:aws:iam::123456789:role/my-role",
+			Paths:         []string{"vendor/"},
+		},
+		CmdCacheRestore{
+			CacheName:     "myCache",
+			Bucket:        "my-bucket",
+			RemotePath:    "prefix/",
+			KeyExpansions: []string{"${project_id}"},
+			RoleARN:       "arn:aws:iam::123456789:role/my-role",
+		},
+	}
+	for _, cmd := range cases {
+		t.Run(cmd.Name(), func(t *testing.T) {
+			assert(t, cmd.Validate() == nil, cmd.Name(), "role_arn-only path should be valid")
+			defer catch(t, cmd.Name(), "resolve")
+			rcmd := cmd.Resolve()
+			require(t, rcmd != nil, cmd.Name(), "resolve should not return nil")
+		})
+	}
 }
