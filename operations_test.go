@@ -82,11 +82,11 @@ func (u unmarshableCmd) MarshalJSON() ([]byte, error) {
 
 func TestPoorlyFormedOperations(t *testing.T) {
 	cases := map[string]Command{
-		"s3put.empty":         CmdS3Put{},
-		"s3put.nocreds":       CmdS3Put{LocalFile: "baz"},
-		"s3put.nofile":        CmdS3Put{AWSKey: "foo", AWSSecret: "bar"},
-		"s3put.nosecret":      CmdS3Put{AWSKey: "foo", LocalFile: "baz"},
-		"s3put.nokey":         CmdS3Put{AWSSecret: "bar", LocalFile: "baz"},
+		"s3put.empty":                      CmdS3Put{},
+		"s3put.nocreds":                    CmdS3Put{LocalFile: "baz"},
+		"s3put.nofile":                     CmdS3Put{AWSKey: "foo", AWSSecret: "bar"},
+		"s3put.nosecret":                   CmdS3Put{AWSKey: "foo", LocalFile: "baz"},
+		"s3put.nokey":                      CmdS3Put{AWSSecret: "bar", LocalFile: "baz"},
 		"archive.create_auto":              CmdArchiveCreate{Format: ArchiveFormat("auto")},
 		"archive.invalid":                  CmdArchiveExtract{Format: ArchiveFormat("bleh")},
 		"cache.save.empty":                 CmdCacheSave{},
