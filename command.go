@@ -41,6 +41,8 @@ func init() {
 		timeoutUpdateFactory,
 		githubGenerateTokenFactory,
 		testSelectionGetFactory,
+		cacheSaveFactory,
+		cacheRestoreFactory,
 	}
 	registeredCommands.mu.Lock()
 	defer registeredCommands.mu.Unlock()
