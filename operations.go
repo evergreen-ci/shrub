@@ -649,17 +649,18 @@ func (c CmdTestSelectionGet) Resolve() *CommandDefinition {
 func testSelectionGetFactory() Command { return CmdTestSelectionGet{} }
 
 type CmdCacheSave struct {
-	CacheName       string   `json:"name" yaml:"name"`
-	Bucket          string   `json:"bucket" yaml:"bucket"`
-	RemotePath      string   `json:"remote_path" yaml:"remote_path"`
-	KeyFiles        []string `json:"key_files,omitempty" yaml:"key_files,omitempty"`
-	KeyExpansions   []string `json:"key_expansions" yaml:"key_expansions"`
-	AWSKey          string   `json:"aws_key,omitempty" yaml:"aws_key,omitempty"`
-	AWSSecret       string   `json:"aws_secret,omitempty" yaml:"aws_secret,omitempty"`
-	AWSSessionToken string   `json:"aws_session_token,omitempty" yaml:"aws_session_token,omitempty"`
-	RoleARN         string   `json:"role_arn,omitempty" yaml:"role_arn,omitempty"`
-	Region          string   `json:"region,omitempty" yaml:"region,omitempty"`
-	Paths           []string `json:"paths" yaml:"paths"`
+	CacheName        string   `json:"name" yaml:"name"`
+	Bucket           string   `json:"bucket" yaml:"bucket"`
+	RemotePath       string   `json:"remote_path" yaml:"remote_path"`
+	KeyFiles         []string `json:"key_files,omitempty" yaml:"key_files,omitempty"`
+	KeyExpansions    []string `json:"key_expansions" yaml:"key_expansions"`
+	AWSKey           string   `json:"aws_key,omitempty" yaml:"aws_key,omitempty"`
+	AWSSecret        string   `json:"aws_secret,omitempty" yaml:"aws_secret,omitempty"`
+	AWSSessionToken  string   `json:"aws_session_token,omitempty" yaml:"aws_session_token,omitempty"`
+	RoleARN          string   `json:"role_arn,omitempty" yaml:"role_arn,omitempty"`
+	Region           string   `json:"region,omitempty" yaml:"region,omitempty"`
+	Paths            []string `json:"paths" yaml:"paths"`
+	PreserveSymlinks bool     `json:"preserve_symlinks,omitempty" yaml:"preserve_symlinks,omitempty"`
 }
 
 func (c CmdCacheSave) Name() string { return "cache.save" }
@@ -694,16 +695,17 @@ func (c CmdCacheSave) Resolve() *CommandDefinition {
 func cacheSaveFactory() Command { return CmdCacheSave{} }
 
 type CmdCacheRestore struct {
-	CacheName       string   `json:"name" yaml:"name"`
-	Bucket          string   `json:"bucket" yaml:"bucket"`
-	RemotePath      string   `json:"remote_path" yaml:"remote_path"`
-	KeyFiles        []string `json:"key_files,omitempty" yaml:"key_files,omitempty"`
-	KeyExpansions   []string `json:"key_expansions" yaml:"key_expansions"`
-	AWSKey          string   `json:"aws_key,omitempty" yaml:"aws_key,omitempty"`
-	AWSSecret       string   `json:"aws_secret,omitempty" yaml:"aws_secret,omitempty"`
-	AWSSessionToken string   `json:"aws_session_token,omitempty" yaml:"aws_session_token,omitempty"`
-	RoleARN         string   `json:"role_arn,omitempty" yaml:"role_arn,omitempty"`
-	Region          string   `json:"region,omitempty" yaml:"region,omitempty"`
+	CacheName        string   `json:"name" yaml:"name"`
+	Bucket           string   `json:"bucket" yaml:"bucket"`
+	RemotePath       string   `json:"remote_path" yaml:"remote_path"`
+	KeyFiles         []string `json:"key_files,omitempty" yaml:"key_files,omitempty"`
+	KeyExpansions    []string `json:"key_expansions" yaml:"key_expansions"`
+	AWSKey           string   `json:"aws_key,omitempty" yaml:"aws_key,omitempty"`
+	AWSSecret        string   `json:"aws_secret,omitempty" yaml:"aws_secret,omitempty"`
+	AWSSessionToken  string   `json:"aws_session_token,omitempty" yaml:"aws_session_token,omitempty"`
+	RoleARN          string   `json:"role_arn,omitempty" yaml:"role_arn,omitempty"`
+	Region           string   `json:"region,omitempty" yaml:"region,omitempty"`
+	PreserveSymlinks bool     `json:"preserve_symlinks,omitempty" yaml:"preserve_symlinks,omitempty"`
 }
 
 func (c CmdCacheRestore) Name() string { return "cache.restore" }
